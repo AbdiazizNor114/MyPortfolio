@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import "./style.css";
+
+import React, { useEffect, useState } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
+
+import Admin from "./pages/Admin";
+import { dataService } from "./services/dataService";
 import emailjs from "@emailjs/browser";
 import { useRef } from "react";
-
-import { dataService } from "./services/dataService";
-import Admin from "./pages/Admin";
-import "./style.css";
 
 export default function App() {
   const location = useLocation();
@@ -108,6 +109,10 @@ export default function App() {
 
             <a className="btn" href="#contact" onClick={() => setMenuOpen(false)}>
               Contact Me
+            </a>
+
+            <a className="btn" href="#contact" onClick={() => setMenuOpen(false)}>
+              Test Link
             </a>
 
           </ul>
