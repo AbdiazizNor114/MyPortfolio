@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { dataService } from "../services/dataService";
-import "./Admin.css";
+import "../styles/Admin.css";
 
 export default function Admin() {
   const navigate = useNavigate();
