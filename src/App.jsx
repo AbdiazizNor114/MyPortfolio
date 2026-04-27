@@ -110,11 +110,6 @@ export default function App() {
             <a className="btn" href="#contact" onClick={() => setMenuOpen(false)}>
               Contact Me
             </a>
-
-            <a className="btn" href="#contact" onClick={() => setMenuOpen(false)}>
-              Test Link
-            </a>
-
           </ul>
 
         </nav>
