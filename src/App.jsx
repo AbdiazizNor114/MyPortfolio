@@ -261,14 +261,14 @@ export default function App() {
               <input
                 type="text"
                 name="user_name"
-                placeholder="YOUR NAME"
+                placeholder="YOUR  NAME"
                 required
               />
 
               <input
                 type="email"
                 name="user_email"
-                placeholder="YOUR EMAIL"
+                placeholder="YOUR  EMAIL"
                 required
               />
 
