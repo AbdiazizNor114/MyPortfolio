@@ -9,6 +9,7 @@ import "./style.css";
 
 export default function App() {
   const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const [projects, setProjects] = useState([]);
   const [blogs, setBlogs] = useState([]);
@@ -52,23 +53,65 @@ export default function App() {
     <div className="portfolio-wrapper">
 
       {/* NAVBAR */}
+      {/* NAVBAR */}
       <header>
         <nav className="container navbar">
-         <img
+
+          {/* LOGO */}
+          <img
             src="./images/svg/abdiaziz-nor-minimal-monogram.svg"
             alt="logo"
             className="logo"
-            onClick={() => setView('portfolio')}
-            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              setView("portfolio");
+              setMenuOpen(false);
+            }}
+            style={{ cursor: "pointer" }}
           />
 
-          <ul className="nav-links">
-            <li><a href="#About" onClick={() => setView('portfolio')}>About</a></li>
-            <li><a href="#Skills" onClick={() => setView('portfolio')}>Skills</a></li>
-            <li><a href="#" onClick={() => setView('projects')}>Projects</a></li>
-            <li><a href="#" onClick={() => setView('blog')}>Blog</a></li>
-            <a className="btn" href="#contact">Contact Me</a>
+          {/* HAMBURGER */}
+          <div
+            className="hamburger"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          {/* NAV LINKS */}
+          <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
+
+            <li>
+              <a href="#About" onClick={() => { setView("portfolio"); setMenuOpen(false); }}>
+                About
+              </a>
+            </li>
+
+            <li>
+              <a href="#Skills" onClick={() => { setView("portfolio"); setMenuOpen(false); }}>
+                Skills
+              </a>
+            </li>
+
+            <li>
+              <a onClick={() => { setView("projects"); setMenuOpen(false); }}>
+                Projects
+              </a>
+            </li>
+
+            <li>
+              <a onClick={() => { setView("blog"); setMenuOpen(false); }}>
+                Blog
+              </a>
+            </li>
+
+            <a className="btn" href="#contact" onClick={() => setMenuOpen(false)}>
+              Contact Me
+            </a>
+
           </ul>
+
         </nav>
       </header>
 
