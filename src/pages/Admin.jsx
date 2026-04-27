@@ -1,181 +1,261 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { dataService } from "../services/dataService";
 import "./Admin.css";
 
-const LANGUAGES = [
-  "Python",
-  "JavaScript",
-  "TypeScript",
-  "Java",
-  "C#",
-  "C++",
-  "Go",
-  "Rust",
-  "Kotlin",
-  "Swift",
-  "Dart",
-  "PHP",
-  "Ruby",
-  "Scala",
-  "R",
-  "SQL",
-  "Bash",
-  "HTML/CSS",
-  "React",
-  "Node.js",
-  "Machine Learning",
-  "AI / ML",
-  "Other"
-];
-
 export default function Admin() {
   const navigate = useNavigate();
 
+  const [tab, setTab] = useState("projects"); // projects | blogs
+  const [items, setItems] = useState([]);
+
   const [form, setForm] = useState({
+    id: null,
     title: "",
     desc: "",
     tech: "",
-    language: "Python",
+    language: "",
     customLanguage: "",
-    type: "project",
-    media: null,
   });
 
-  const handleFile = (e) => {
-    setForm({ ...form, media: e.target.files[0] });
+  const [editing, setEditing] = useState(false);
+
+  // LOAD DATA
+  useEffect(() => {
+    loadData();
+  }, [tab]);
+
+  const loadData = () => {
+    setItems(
+      tab === "projects"
+        ? dataService.getProjects()
+        : dataService.getBlogs()
+    );
   };
 
+  const reset = () => {
+    setForm({
+      id: null,
+      title: "",
+      desc: "",
+      tech: "",
+      language: "",
+      customLanguage: "",
+    });
+    setEditing(false);
+  };
+
+  // GET FINAL LANGUAGE
+  const getFinalLanguage = () => {
+    return form.language === "Other"
+      ? form.customLanguage
+      : form.language;
+  };
+
+  // SAVE (CREATE / UPDATE)
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const finalLanguage =
-      form.language === "Other" ? form.customLanguage : form.language;
+    if (tab === "projects") {
+      const project = {
+        ...form,
+        language: getFinalLanguage(),
+      };
 
-    const item = {
-      id: Date.now(),
-      title: form.title,
-      desc: form.desc,
-      tech: form.tech,
-      language: finalLanguage,
-      media: form.media ? form.media.name : null,
-    };
+      if (editing) {
+        dataService.updateProject(project);
+      } else {
+        dataService.saveProject({
+          ...project,
+          id: Date.now(),
+        });
+      }
+    } else {
+      const blog = {
+        ...form,
+        id: form.id || Date.now(),
+        content: form.desc,
+        date: new Date().toLocaleDateString(),
+      };
 
-    if (form.type === "project") dataService.saveProject(item);
-    else dataService.saveBlog(item);
+      if (editing) {
+        dataService.updateBlog(blog);
+      } else {
+        dataService.saveBlog(blog);
+      }
+    }
 
-    alert("Saved Successfully!");
+    loadData();
+    reset();
+  };
+
+  // EDIT
+  const handleEdit = (item) => {
+    setForm(item);
+    setEditing(true);
+  };
+
+  // DELETE
+  const handleDelete = (id) => {
+    if (tab === "projects") {
+      dataService.deleteProject(id);
+    } else {
+      dataService.deleteBlog(id);
+    }
+    loadData();
   };
 
   return (
-    <div className="admin-container">
+    <div className="admin-layout">
 
-      <div className="admin-card">
+      {/* LEFT SIDEBAR */}
+      <div className="admin-sidebar">
 
-        {/* HEADER */}
-        <div className="admin-header">
-          <h2>ADMIN CONTROL PANEL</h2>
+        <h2>ADMIN</h2>
 
-          <button
-            className="exit-btn"
-            onClick={() => navigate("/")}
-          >
-            EXIT
-          </button>
+        <button
+          className={tab === "projects" ? "active" : ""}
+          onClick={() => setTab("projects")}
+        >
+          Projects
+        </button>
+
+        <button
+          className={tab === "blogs" ? "active" : ""}
+          onClick={() => setTab("blogs")}
+        >
+          Blogs
+        </button>
+
+        <button className="exit" onClick={() => navigate("/")}>
+          EXIT
+        </button>
+
+        {/* LIST */}
+        <div className="admin-list">
+          {items.map((item) => (
+            <div key={item.id} className="admin-list-item">
+
+              <div>
+                <h4>{item.title}</h4>
+                <small>
+                  {item.language || item.date || ""}
+                </small>
+              </div>
+
+              <div className="actions">
+                <button onClick={() => handleEdit(item)}>✏️</button>
+                <button onClick={() => handleDelete(item.id)}>🗑</button>
+              </div>
+
+            </div>
+          ))}
         </div>
 
-        <form className="admin-form" onSubmit={handleSubmit}>
+      </div>
 
-          {/* TYPE */}
-          <div className="form-group">
-            <label>Type</label>
-            <select
-              onChange={(e) =>
-                setForm({ ...form, type: e.target.value })
-              }
-            >
-              <option value="project">Project</option>
-              <option value="blog">Blog</option>
-            </select>
-          </div>
+      {/* RIGHT PANEL */}
+      <div className="admin-content">
 
-          {/* LANGUAGE */}
-          <div className="form-group">
-            <label>Programming Language</label>
+        <h2>
+          {editing ? "Edit" : "Create"} {tab}
+        </h2>
 
-            <select
-              value={form.language}
-              onChange={(e) =>
-                setForm({ ...form, language: e.target.value })
-              }
-            >
-              {LANGUAGES.map((lang, i) => (
-                <option key={i} value={lang}>
-                  {lang}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* CUSTOM LANGUAGE */}
-          {form.language === "Other" && (
-            <input
-              placeholder="Write your language..."
-              onChange={(e) =>
-                setForm({ ...form, customLanguage: e.target.value })
-              }
-            />
-          )}
+        <form onSubmit={handleSubmit} className="admin-form">
 
           {/* TITLE */}
-          <div className="form-group">
-            <label>Title</label>
-            <input
-              placeholder="Project / Blog title"
-              onChange={(e) =>
-                setForm({ ...form, title: e.target.value })
-              }
-            />
-          </div>
-
-          {/* TECH */}
-          <div className="form-group">
-            <label>Tech Stack</label>
-            <input
-              placeholder="e.g React, Node.js, Flask"
-              onChange={(e) =>
-                setForm({ ...form, tech: e.target.value })
-              }
-            />
-          </div>
+          <input
+            placeholder="Title"
+            value={form.title}
+            onChange={(e) =>
+              setForm({ ...form, title: e.target.value })
+            }
+          />
 
           {/* DESCRIPTION */}
-          <div className="form-group">
-            <label>Description</label>
-            <textarea
-              placeholder="Describe your project..."
-              onChange={(e) =>
-                setForm({ ...form, desc: e.target.value })
-              }
-            />
-          </div>
+          <textarea
+            placeholder="Description"
+            value={form.desc}
+            onChange={(e) =>
+              setForm({ ...form, desc: e.target.value })
+            }
+          />
 
-          {/* MEDIA */}
-          <div className="form-group">
-            <label>Media (Image / Video)</label>
-            <input
-              type="file"
-              accept="image/*,video/*"
-              onChange={handleFile}
-            />
-          </div>
+          {/* PROJECT FIELDS */}
+          {tab === "projects" && (
+            <>
+              {/* TECH */}
+              <input
+                placeholder="Tech Stack"
+                value={form.tech}
+                onChange={(e) =>
+                  setForm({ ...form, tech: e.target.value })
+                }
+              />
 
-          {/* BUTTON */}
-          <button className="admin-btn" type="submit">
-            SAVE
+              {/* LANGUAGE SELECT */}
+              <select
+                value={form.language}
+                onChange={(e) =>
+                  setForm({ ...form, language: e.target.value })
+                }
+              >
+                <option value="">Select Language</option>
+                <option value="Python">Python</option>
+                <option value="JavaScript">JavaScript</option>
+                <option value="TypeScript">TypeScript</option>
+                <option value="Java">Java</option>
+                <option value="C#">C#</option>
+                <option value="C++">C++</option>
+                <option value="Go">Go</option>
+                <option value="Rust">Rust</option>
+                <option value="Kotlin">Kotlin</option>
+                <option value="Swift">Swift</option>
+                <option value="Dart">Dart</option>
+                <option value="PHP">PHP</option>
+                <option value="Ruby">Ruby</option>
+                <option value="SQL">SQL</option>
+                <option value="HTML/CSS">HTML/CSS</option>
+                <option value="React">React</option>
+                <option value="Node.js">Node.js</option>
+                <option value="Machine Learning">Machine Learning</option>
+                <option value="AI">AI</option>
+                <option value="Other">Other</option>
+              </select>
+
+              {/* CUSTOM LANGUAGE */}
+              {form.language === "Other" && (
+                <input
+                  placeholder="Custom Language"
+                  value={form.customLanguage}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      customLanguage: e.target.value,
+                    })
+                  }
+                />
+              )}
+            </>
+          )}
+
+          {/* BUTTONS */}
+          <button className="admin-btn">
+            {editing ? "UPDATE" : "ADD"}
           </button>
 
+          {editing && (
+            <button
+              type="button"
+              className="cancel"
+              onClick={reset}
+            >
+              CANCEL
+            </button>
+          )}
+
         </form>
+
       </div>
     </div>
   );

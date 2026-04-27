@@ -1,138 +1,211 @@
-/* ===== ADMIN CONTAINER ===== */
-.admin-container {
-  min-height: 100vh;
+:root {
+  --bg: #0b0f17;
+  --panel: rgba(255,255,255,0.04);
+  --panel-hover: rgba(255,255,255,0.07);
+  --border: rgba(255,255,255,0.08);
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --blue: #0076ff;
+}
+
+/* ===== LAYOUT ===== */
+.admin-layout {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #0a0a0a;
+  height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* ===== SIDEBAR ===== */
+.admin-sidebar {
+  width: 320px;
+  background: rgba(255,255,255,0.03);
+  border-right: 1px solid var(--border);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-sidebar h2 {
+  color: var(--blue);
+  letter-spacing: 3px;
+  margin-bottom: 10px;
+}
+
+/* sidebar buttons */
+.admin-sidebar button {
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 10px;
+  border-radius: 10px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.admin-sidebar button:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+.admin-sidebar button.active {
+  background: rgba(0,118,255,0.15);
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+.admin-sidebar .exit {
+  margin-top: auto;
+  border-color: #ff4d4d;
+  color: #ff4d4d;
+}
+
+/* ===== LIST ===== */
+.admin-list {
+  margin-top: 20px;
+  overflow-y: auto;
+  flex: 1;
+  padding-right: 4px;
+}
+
+.admin-list-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  transition: 0.2s;
+}
+
+.admin-list-item:hover {
+  background: var(--panel-hover);
+}
+
+.admin-list-item h4 {
+  margin: 0;
+  font-size: 13px;
+}
+
+.admin-list-item small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.actions {
+  display: flex;
+  gap: 6px;
+}
+
+.actions button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  transition: 0.2s;
+}
+
+.actions button:hover {
+  color: var(--blue);
+}
+
+/* ===== RIGHT PANEL ===== */
+.admin-content {
+  flex: 1;
   padding: 40px;
 }
 
-/* ===== CARD ===== */
-.admin-card {
-  width: 100%;
-  max-width: 600px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 18px;
-  padding: 35px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-  color: #f5f5dc;
-}
-
-/* ===== HEADER ===== */
-.admin-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
-}
-
-.admin-header h2 {
-  font-size: 18px;
-  letter-spacing: 3px;
-  color: #0076ff;
-}
-
-/* ===== EXIT BUTTON ===== */
-.exit-btn {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #aaa;
-  padding: 8px 14px;
-  font-size: 12px;
-  letter-spacing: 2px;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: 0.3s;
-}
-
-.exit-btn:hover {
-  border-color: #0076ff;
-  color: #0076ff;
+.admin-content h2 {
+  margin-bottom: 20px;
+  color: var(--blue);
 }
 
 /* ===== FORM ===== */
 .admin-form {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 12px;
+  max-width: 500px;
 }
 
-/* ===== FORM GROUP ===== */
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.form-group label {
-  font-size: 11px;
-  letter-spacing: 2px;
-  opacity: 0.7;
-}
-
-/* ===== INPUTS ===== */
+/* inputs + textarea */
 .admin-form input,
-.admin-form textarea,
-.admin-form select {
-  background: white;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 14px;
+.admin-form textarea {
+  padding: 12px;
   border-radius: 10px;
-  color:black;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.03);
+  color: var(--text);
   outline: none;
-  font-size: 14px;
-  transition: 0.3s;
+  transition: 0.2s;
+}
+
+.admin-form input:focus,
+.admin-form textarea:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 2px rgba(0,118,255,0.15);
 }
 
 .admin-form textarea {
-  resize: none;
   min-height: 120px;
 }
 
-/* focus effect */
-.admin-form input:focus,
-.admin-form textarea:focus,
-.admin-form select:focus {
-  border-color: #0076ff;
-  box-shadow: 0 0 0 2px rgba(0, 118, 255, 0.15);
-  background: white;
-}
+/* ===== SELECT FIX (IMPORTANT) ===== */
+.admin-form select {
+  width: 100%;
+  padding: 14px 40px 14px 16px;
+  font-size: 14px;
+  height: 48px;
 
-/* ===== FILE INPUT ===== */
-.admin-form input[type="file"] {
-  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+
+  background-color: rgba(255,255,255,0.03);
+  color: var(--text);
+
+  outline: none;
   cursor: pointer;
+
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  /* dropdown arrow */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%239ca3af' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 7l4.5 5 4.5-5H5.5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
 }
 
-/* ===== BUTTON ===== */
+/* FIX OPTION COLORS (THIS FIXES WHITE ISSUE) */
+.admin-form option {
+  background: #111827;
+  color: #e5e7eb;
+}
+
+/* ===== BUTTONS ===== */
 .admin-btn {
-  margin-top: 10px;
-  padding: 14px;
-  background: linear-gradient(135deg, #0047ab, #0076ff);
+  padding: 12px;
   border: none;
   border-radius: 10px;
+  background: linear-gradient(135deg, #0047ab, #0076ff);
   color: white;
-  font-weight: bold;
-  letter-spacing: 2px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.2s;
 }
 
 .admin-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(0, 118, 255, 0.3);
 }
 
-/* ===== MOBILE ===== */
-@media (max-width: 600px) {
-  .admin-card {
-    padding: 25px;
-  }
-
-  .admin-header h2 {
-    font-size: 14px;
-  }
+.cancel {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
 }

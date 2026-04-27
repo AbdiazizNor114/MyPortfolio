@@ -1,30 +1,53 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
+import emailjs from "@emailjs/browser";
+import { useRef } from "react";
 
 import { dataService } from "./services/dataService";
 import Admin from "./pages/Admin";
 import "./style.css";
 
-
 export default function App() {
+  const location = useLocation();
+
   const [projects, setProjects] = useState([]);
   const [blogs, setBlogs] = useState([]);
-  const [view, setView] = useState('portfolio');
+
+  const [view, setView] = useState("portfolio");
   const [selectedBlog, setSelectedBlog] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);
-  
+  const formRef = useRef();
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    emailjs.sendForm(
+      "service_rc09617",
+      "template_ozk0ioe",
+      formRef.current,
+      "yDUR2GPj5Ss6xZp5L"
+    )
+    .then(() => {
+      alert("Message sent successfully!");
+      formRef.current.reset();
+    })
+    .catch((error) => {
+      console.log("FAILED...", error);
+      alert("Failed to send message");
+    });
+  };
+
   const isAdmin = window.location.pathname === "/admin";
 
+  // 🔥 FIX: reload data when route changes
   useEffect(() => {
     setProjects(dataService.getProjects());
     setBlogs(dataService.getBlogs());
-  }, []);
+  }, [location.pathname]);
 
   if (isAdmin) {
     return <Admin />;
   }
-
-
   return (
     <div className="portfolio-wrapper">
 
@@ -67,9 +90,17 @@ export default function App() {
                 </div>
 
                 <div className="contact-me">
-                  <a href="#"><i className="fa-brands fa-whatsapp"></i></a>
-                  <a href="#"><i className="fa-brands fa-linkedin"></i></a>
-                  <a href="#"><i className="fa-brands fa-github"></i></a>
+                  <a href="https://wa.link/uonz28" target="_blank" rel="noopener noreferrer">
+                    <i className="fa-brands fa-whatsapp"></i>
+                  </a>
+
+                  <a href="#" target="_blank" rel="noopener noreferrer">
+                    <i className="fa-brands fa-linkedin"></i>
+                  </a>
+
+                  <a href="https://github.com/AbdiazizNor114" target="_blank" rel="noopener noreferrer">
+                    <i className="fa-brands fa-github"></i>
+                  </a>
                 </div>
               </div>
 
@@ -127,14 +158,39 @@ export default function App() {
               </div>
 
               <div className="skill-card">
-                <img src="./images/nodejs.png" alt="Node.js" />
-                <p>Node.js</p>
+                <img src="./images/csharp_logo.png" alt="C#" />
+                <p>C#</p>
               </div>
 
               <div className="skill-card">
                 <img src="./images/dart-logo-for-shares.png" alt="Dart" />
                 <p>Dart</p>
               </div>
+
+              
+              <div className="skill-card">
+                <img src="./images/typscript.png" alt="TypeScript" />
+                <p>TypeScript</p>
+              </div>
+
+              <div className="skill-card">
+                <img src="./images/javascript.svg" alt="JavaScript" />
+                <p>JavaScript</p>
+              </div>
+
+              <div className="skill-card">
+                <img src="./images/nodejs.png" alt="Node.js" />
+                <p>Node.js</p>
+              </div>
+
+
+              <div className="skill-card">
+                <img src="./images/database-icon.jpg" alt="Database" />
+                <p>Database</p>
+              </div>
+              
+
+              
               
               <div className="skill-card">
                 <img src="./images/machine-learning.svg" alt="ML" />
@@ -157,13 +213,33 @@ export default function App() {
           <section className="contact container" id="contact">
             <h4>CONTACT</h4>
 
-            <form>
-              <input type="text" placeholder="YOUR NAME" />
-              <input type="email" placeholder="YOUR EMAIL" />
-              <textarea placeholder="MESSAGE" rows="5"></textarea>
-              <button className="btn" type="button">
-                SEND
+            <form ref={formRef} onSubmit={sendEmail}>
+
+              <input
+                type="text"
+                name="user_name"
+                placeholder="YOUR NAME"
+                required
+              />
+
+              <input
+                type="email"
+                name="user_email"
+                placeholder="YOUR EMAIL"
+                required
+              />
+
+              <textarea
+                name="message"
+                placeholder="MESSAGE"
+                rows="5"
+                required
+              ></textarea>
+
+              <button className="btn" type="submit">
+                SEND MESSAGE
               </button>
+
             </form>
           </section>
 
@@ -203,6 +279,7 @@ export default function App() {
           </div>
 
           {/* BLOG MODAL (FULL VIEW) */}
+          {/* BLOG MODAL (FULL VIEW) */}
           {selectedBlog && (
             <div
               className="modal-overlay"
@@ -221,6 +298,13 @@ export default function App() {
                 <p style={{ marginTop: "20px", lineHeight: "1.6" }}>
                   {selectedBlog.content}
                 </p>
+
+                {/* Optional extra like project */}
+                {selectedBlog.tags && (
+                  <div style={{ marginTop: "15px" }}>
+                    <strong>Tags:</strong> {selectedBlog.tags}
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -294,8 +378,12 @@ export default function App() {
       <footer>
         <div className="container footer-info">
           <div className="social">
-            <a href="#"><i className="fab fa-github"></i></a>
-            <a href="#"><i className="fab fa-linkedin"></i></a>
+            <a href="https://github.com/AbdiazizNor114" target="_blank" rel="noopener noreferrer">
+              <i className="fab fa-github"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/abdiaziz-nor-1b2b1b1b1/" target="_blank" rel="noopener noreferrer">
+              <i className="fab fa-linkedin"></i>
+            </a>
           </div>
           <p>&copy; 2026 ABDIAZIZ NOR</p>
         </div>
