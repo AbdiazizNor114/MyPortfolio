@@ -1,0 +1,146 @@
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  z-index: 2000;
+}
+
+.hamburger span {
+  width: 28px;
+  height: 3px;
+  background: white;
+  border-radius: 5px;
+}
+
+@media (max-width: 900px) {
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--admin-border);
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-about {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-top {
+    flex-direction: column;
+    text-align: center;
+    gap: 40px;
+  }
+
+  .info h2 {
+    font-size: 4rem;
+  }
+
+  .img-ring {
+    width: 280px;
+    height: 280px;
+  }
+
+  .img-ring img {
+    width: 240px;
+    height: 240px;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 90px;
+    left: 0;
+    right: 0;
+    background: #0a0a0a;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    display: none;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .modal-overlay {
+    padding: 14px;
+    align-items: flex-end;
+  }
+
+  .modal-box {
+    width: 100%;
+    max-height: 90vh;
+    padding: 18px;
+    border-radius: 16px 16px 12px 12px;
+  }
+
+  .modal-media {
+    max-height: 40vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 15px;
+  }
+
+  .info h2 {
+    font-size: 3rem;
+  }
+
+  h4 {
+    font-size: 1.5rem;
+  }
+
+  .skills-grid,
+  .blog-list {
+    grid-template-columns: 1fr;
+  }
+
+  .img-ring {
+    width: 220px;
+    height: 220px;
+  }
+
+  .img-ring img {
+    width: 180px;
+    height: 180px;
+  }
+
+  .modal-overlay {
+    padding: 10px;
+  }
+
+  .modal-box {
+    padding: 14px;
+  }
+
+  .modal-box h2 {
+    margin-right: 42px;
+    font-size: 1rem;
+  }
+
+  .modal-close {
+    width: 32px;
+    height: 32px;
+    top: 10px;
+    right: 10px;
+  }
+
+  .modal-content {
+    font-size: 0.93rem;
+    line-height: 1.6;
+  }
+}

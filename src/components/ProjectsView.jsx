@@ -17,7 +17,7 @@ export default function ProjectsView({ projects }) {
             <div key={p.id} className="grid-col blog-card" onClick={() => setSelected(p)} style={{ cursor: "pointer" }}>
               <h3>{p.title}</h3>
               <small>{p.language || "Unknown language"}</small>
-              <p>{p.desc?.slice(0, 140)}...</p>
+              <p>{(p.desc || p.content || "").slice(0, 140)}...</p>
               <span className="tech-stack">{p.tech}</span>
             </div>
           ))
@@ -25,14 +25,13 @@ export default function ProjectsView({ projects }) {
       </div>
 
       {selected && (
-        <Modal onClose={() => setSelected(null)}>
-          <h2>{selected.title}</h2>
-          <small style={{ opacity: 0.6 }}>{selected.language}</small>
-          <p style={{ marginTop: 20, lineHeight: 1.6 }}>{selected.desc}</p>
-          <div style={{ marginTop: 15 }}>
-            <strong>Tech:</strong> {selected.tech}
-          </div>
-        </Modal>
+        <Modal
+          title={selected.title}
+          date={selected.language}
+          content={selected.desc || selected.content}
+          media={selected.media}
+          onClose={() => setSelected(null)}
+        />
       )}
     </main>
   );

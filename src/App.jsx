@@ -22,8 +22,24 @@ export default function App() {
   const [blogs, setBlogs] = useState([]);
 
   useEffect(() => {
-    setProjects(dataService.getProjects());
-    setBlogs(dataService.getBlogs());
+    let cancelled = false;
+
+    const loadData = async () => {
+      const [projectData, blogData] = await Promise.all([
+        dataService.getProjects(),
+        dataService.getBlogs(),
+      ]);
+
+      if (cancelled) return;
+      setProjects(projectData);
+      setBlogs(blogData);
+    };
+
+    loadData();
+
+    return () => {
+      cancelled = true;
+    };
   }, [location.pathname]);
 
   if (window.location.pathname === "/admin") return <Admin />;

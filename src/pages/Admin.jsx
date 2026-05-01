@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getDownloadURL, ref, uploadBytesResumable, getStorage } from "firebase/storage";
 import { dataService } from "../services/dataService";
-import "../styles/Admin.css";
+import { app } from "../firebase";
+import "../styles/pages/admin.css";
 
 export default function Admin() {
   const navigate = useNavigate();
+  const storage = getStorage(app);
 
   const [tab, setTab] = useState("projects"); // projects | blogs
   const [items, setItems] = useState([]);
@@ -16,21 +19,25 @@ export default function Admin() {
     tech: "",
     language: "",
     customLanguage: "",
+    media: "",
   });
 
   const [editing, setEditing] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   // LOAD DATA
   useEffect(() => {
     loadData();
   }, [tab]);
 
-  const loadData = () => {
-    setItems(
+  const loadData = async () => {
+    const nextItems =
       tab === "projects"
-        ? dataService.getProjects()
-        : dataService.getBlogs()
-    );
+        ? await dataService.getProjects()
+        : await dataService.getBlogs();
+    setItems(nextItems);
   };
 
   const reset = () => {
@@ -41,6 +48,7 @@ export default function Admin() {
       tech: "",
       language: "",
       customLanguage: "",
+      media: "",
     });
     setEditing(false);
   };
@@ -53,56 +61,102 @@ export default function Admin() {
   };
 
   // SAVE (CREATE / UPDATE)
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isUploading) return;
 
     if (tab === "projects") {
       const project = {
         ...form,
         language: getFinalLanguage(),
+        media: form.media?.trim() || "",
       };
 
       if (editing) {
-        dataService.updateProject(project);
+        await dataService.updateProject(project);
       } else {
-        dataService.saveProject({
-          ...project,
-          id: Date.now(),
-        });
+        await dataService.saveProject(project);
       }
     } else {
       const blog = {
         ...form,
-        id: form.id || Date.now(),
         content: form.desc,
         date: new Date().toLocaleDateString(),
+        media: form.media?.trim() || "",
       };
 
       if (editing) {
-        dataService.updateBlog(blog);
+        await dataService.updateBlog(blog);
       } else {
-        dataService.saveBlog(blog);
+        await dataService.saveBlog(blog);
       }
     }
 
-    loadData();
+    await loadData();
     reset();
+  };
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploadError("");
+    setUploadProgress(0);
+    setIsUploading(true);
+
+    const cleanName = file.name.replace(/\s+/g, "-").toLowerCase();
+    const storageRef = ref(
+      storage,
+      `media/${tab}/${Date.now()}-${cleanName}`
+    );
+
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // Show upload progress
+        const progress = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        setUploadProgress(progress);
+      },
+      (error) => {
+        setUploadError(`Upload failed: ${error.message}`);
+        setIsUploading(false);
+        setUploadProgress(0);
+      },
+      async () => {
+        const url = await getDownloadURL(uploadTask.snapshot.ref);
+        setForm((prev) => ({ ...prev, media: url }));
+        setIsUploading(false);
+        setUploadProgress(0);
+      }
+    );
   };
 
   // EDIT
   const handleEdit = (item) => {
-    setForm(item);
+    setForm({
+      id: item.id || null,
+      title: item.title || "",
+      desc: item.desc || item.content || "",
+      tech: item.tech || "",
+      language: item.language || "",
+      customLanguage: item.customLanguage || "",
+      media: item.media || "",
+    });
     setEditing(true);
   };
 
   // DELETE
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (tab === "projects") {
-      dataService.deleteProject(id);
+      await dataService.deleteProject(id);
     } else {
-      dataService.deleteBlog(id);
+      await dataService.deleteBlog(id);
     }
-    loadData();
+    await loadData();
   };
 
   return (
@@ -140,6 +194,7 @@ export default function Admin() {
                 <h4>{item.title}</h4>
                 <small>
                   {item.language || item.date || ""}
+                  {item.media ? " • media" : ""}
                 </small>
               </div>
 
@@ -180,6 +235,33 @@ export default function Admin() {
               setForm({ ...form, desc: e.target.value })
             }
           />
+
+          <input
+            placeholder="Media URL or filename (example: demo.mp4 or image.png)"
+            value={form.media}
+            onChange={(e) =>
+              setForm({ ...form, media: e.target.value })
+            }
+          />
+
+          <div className="admin-upload-row">
+            <label className="admin-upload-label">
+              Upload image/video
+              <input
+                type="file"
+                accept="image/*,video/*"
+                onChange={handleFileUpload}
+                disabled={isUploading}
+              />
+            </label>
+            {isUploading && (
+              <div className="upload-progress">
+                <div className="progress-bar" style={{ width: `${uploadProgress}%` }}></div>
+                <small>{uploadProgress}%</small>
+              </div>
+            )}
+            {uploadError && <small className="admin-upload-error">{uploadError}</small>}
+          </div>
 
           {/* PROJECT FIELDS */}
           {tab === "projects" && (
@@ -240,7 +322,7 @@ export default function Admin() {
           )}
 
           {/* BUTTONS */}
-          <button className="admin-btn">
+          <button className="admin-btn" disabled={isUploading}>
             {editing ? "UPDATE" : "ADD"}
           </button>
 

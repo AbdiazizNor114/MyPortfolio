@@ -1,0 +1,141 @@
+/* ================================
+   MODAL OVERLAY
+================================ */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    padding: 24px;
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+    background: rgba(0, 0, 0, 0.78);
+    backdrop-filter: blur(6px);
+  
+    z-index: 9999;
+  }
+  
+  /* ================================
+     MODAL BOX
+  ================================ */
+  .modal-box {
+    position: relative;
+  
+    width: min(760px, 100%);
+    max-height: min(88vh, 920px);
+    overflow-y: auto;
+  
+    padding: 26px;
+  
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  
+    background: linear-gradient(
+      180deg,
+      rgba(18, 18, 18, 0.96),
+      rgba(11, 11, 11, 0.98)
+    );
+  
+    color: #fff;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+  }
+  
+  /* ================================
+     HEADER
+  ================================ */
+  .modal-box h2 {
+    margin: 0 56px 8px 0;
+    font-size: clamp(1.1rem, 2vw, 1.6rem);
+    line-height: 1.25;
+  }
+  
+  .modal-box small {
+    display: block;
+    margin-bottom: 14px;
+    color: #94a3b8;
+  }
+  
+  /* ================================
+     CLOSE BUTTON
+  ================================ */
+  .modal-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+  
+    width: 36px;
+    height: 36px;
+  
+    display: grid;
+    place-items: center;
+  
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  
+    background: rgba(255, 255, 255, 0.04);
+    color: #e2e8f0;
+  
+    cursor: pointer;
+    transition: 0.2s ease;
+  }
+  
+  .modal-close:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(0, 118, 255, 0.5);
+    transform: scale(1.05);
+  }
+  
+  /* ================================
+     MEDIA
+  ================================ */
+  .modal-media-wrapper {
+    margin: 16px 0;
+  
+    border-radius: 14px;
+    overflow: hidden;
+  
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .modal-media {
+    width: 100%;
+    max-height: 52vh;
+  
+    object-fit: contain;
+    display: block;
+  
+    background: #020617;
+  }
+  
+  /* ================================
+     CONTENT
+  ================================ */
+  .modal-content {
+    margin-top: 10px;
+    line-height: 1.7;
+    font-size: 0.98rem;
+  
+    color: #d1d5db;
+    white-space: pre-wrap;
+  }
+  
+  /* ================================
+     FILE LINK
+  ================================ */
+  .file-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  
+    margin: 8px 0 2px;
+  
+    font-weight: 600;
+    color: #93c5fd;
+    text-decoration: none;
+  }
+  
+  .file-link:hover {
+    color: #bfdbfe;
+    text-decoration: underline;
+  }

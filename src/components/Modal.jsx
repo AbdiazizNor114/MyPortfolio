@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 export default function Modal({
   title,
   date,
@@ -5,6 +7,8 @@ export default function Modal({
   media,
   onClose,
 }) {
+  const [expandedMedia, setExpandedMedia] = useState(false);
+
   const isImage = (file) =>
     typeof file === "string" &&
     /\.(jpg|jpeg|png|gif|webp)$/i.test(file);
@@ -13,7 +17,13 @@ export default function Modal({
     typeof file === "string" &&
     /\.(mp4|webm|ogg)$/i.test(file);
 
-  const mediaUrl = (file) => `/uploads/${file}`;
+  const mediaUrl = (file) => {
+    if (!file || typeof file !== "string") return "";
+    if (/^https?:\/\//i.test(file) || file.startsWith("/")) return file;
+    return `/uploads/${file}`;
+  };
+
+  const src = mediaUrl(media);
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -38,22 +48,40 @@ export default function Modal({
         {media && (
           <div className="modal-media-wrapper">
             {isImage(media) && (
-              <img
-                src={mediaUrl(media)}
-                alt="media"
-                className="modal-media"
-              />
+              <>
+                <img
+                  src={src}
+                  alt="media"
+                  className="modal-media"
+                />
+                <button
+                  type="button"
+                  className="modal-expand-btn"
+                  onClick={() => setExpandedMedia(true)}
+                >
+                  Expand media
+                </button>
+              </>
             )}
 
             {isVideo(media) && (
-              <video controls className="modal-media">
-                <source src={mediaUrl(media)} />
-              </video>
+              <>
+                <video controls className="modal-media modal-media-compact">
+                  <source src={src} />
+                </video>
+                <button
+                  type="button"
+                  className="modal-expand-btn"
+                  onClick={() => setExpandedMedia(true)}
+                >
+                  Expand media
+                </button>
+              </>
             )}
 
             {!isImage(media) && !isVideo(media) && (
               <a
-                href={mediaUrl(media)}
+                href={src}
                 target="_blank"
                 rel="noreferrer"
                 className="file-link"
@@ -70,6 +98,39 @@ export default function Modal({
         </p>
 
       </div>
+
+      {expandedMedia && (isImage(media) || isVideo(media)) && (
+        <div
+          className="media-lightbox"
+          onClick={() => setExpandedMedia(false)}
+        >
+          <button
+            type="button"
+            className="media-lightbox-close"
+            onClick={() => setExpandedMedia(false)}
+          >
+            ✕
+          </button>
+
+          {isImage(media) ? (
+            <img
+              src={src}
+              alt="expanded media"
+              className="media-lightbox-content"
+              onClick={(e) => e.stopPropagation()}
+            />
+          ) : (
+            <video
+              controls
+              autoPlay
+              className="media-lightbox-content"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <source src={src} />
+            </video>
+          )}
+        </div>
+      )}
     </div>
   );
 }

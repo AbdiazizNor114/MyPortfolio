@@ -1,0 +1,142 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 30px;
+}
+
+header {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(20px);
+  background: rgba(7, 9, 13, 0.7);
+  border-bottom: 1px solid var(--border);
+}
+
+.navbar {
+  height: 90px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  height: 45px;
+  transition: 0.3s;
+  filter: drop-shadow(0 0 5px rgba(0, 71, 171, 0.5));
+}
+
+.nav-links {
+  display: flex;
+  gap: 40px;
+  list-style: none;
+  align-items: center;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-beige);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  opacity: 0.6;
+  transition: 0.4s;
+}
+
+.nav-links a:hover {
+  opacity: 1;
+  color: var(--glow);
+}
+
+#About,
+#portofolio,
+#contact {
+  scroll-margin-top: 110px;
+}
+
+section.container {
+  margin-top: 120px;
+}
+
+.aboutme {
+  margin-top: 8.875rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5rem;
+}
+
+.grid-about {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+}
+
+.columns-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.contact form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+form input,
+form textarea {
+  width: 100%;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  padding: 20px;
+  border-radius: 12px;
+  color: #fff;
+  margin-bottom: 15px;
+  font-family: inherit;
+  transition: 0.3s;
+}
+
+form input:focus,
+form textarea:focus {
+  border-color: var(--glow);
+  outline: none;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+footer {
+  padding: 100px 0 50px;
+  border-top: 1px solid var(--border);
+  margin-top: 100px;
+  text-align: center;
+}
+
+.footer-info {
+  width: 100%;
+}
+
+.social {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 30px;
+  font-size: 1.5rem;
+}
+
+.social i {
+  transition: 0.3s;
+  color: var(--text-beige);
+}
+
+.social i:hover {
+  color: var(--glow);
+  transform: translateY(-5px);
+}
+
+footer p {
+  font-size: 10px;
+  letter-spacing: 5px;
+  opacity: 0.3;
+}

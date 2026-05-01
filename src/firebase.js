@@ -1,21 +1,20 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getFirestore } from "firebase/firestore";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyDJyV3ItUrcVbNjPIgdB3itA_CVqzvXObA",
-  authDomain: "student-performance-proj-9ba96.firebaseapp.com",
-  projectId: "student-performance-proj-9ba96",
-  storageBucket: "student-performance-proj-9ba96.firebasestorage.app",
-  messagingSenderId: "362459010003",
-  appId: "1:362459010003:web:d801b9fcbb1efe8f649526",
-  measurementId: "G-54XKJJ101E"
+  apiKey: "AIzaSyDuVmLDY8tycpjgeeaZl-YF7MztxEdLj5c",
+  authDomain: "myportfolio-246aa.firebaseapp.com",
+  projectId: "myportfolio-246aa",
+  storageBucket: "myportfolio-246aa.firebasestorage.app",
+  messagingSenderId: "1015483097363",
+  appId: "1:1015483097363:web:fb8869815c0d66c50afae6",
+  measurementId: "G-LH6VLZJYPD",
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+export const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app);
+
+// Analytics only runs in the browser.
+export const analytics =
+  typeof window !== "undefined" ? getAnalytics(app) : null;

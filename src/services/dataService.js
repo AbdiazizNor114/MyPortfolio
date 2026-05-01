@@ -1,53 +1,62 @@
-const PROJECT_KEY = "projects";
-const BLOG_KEY = "blogs";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  updateDoc,
+  query,
+  orderBy,
+} from "firebase/firestore";
+import { db } from "../firebase";
 
-const get = (key) =>
-  JSON.parse(localStorage.getItem(key)) || [];
+const PROJECT_COLLECTION = "projects";
+const BLOG_COLLECTION = "blogs";
 
-const set = (key, data) =>
-  localStorage.setItem(key, JSON.stringify(data));
+const readCollection = async (name) => {
+  const snap = await getDocs(collection(db, name));
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+};
 
 export const dataService = {
   // ================= READ =================
-  getProjects: () => get(PROJECT_KEY),
-  getBlogs: () => get(BLOG_KEY),
+  getProjects: async () => {
+    const q = query(collection(db, PROJECT_COLLECTION), orderBy("media", "asc"));
+    const snap = await getDocs(q);
+    return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  },
+  getBlogs: async () => readCollection(BLOG_COLLECTION),
 
   // ================= CREATE =================
-  saveProject: (project) => {
-    const data = get(PROJECT_KEY);
-    data.push(project);
-    set(PROJECT_KEY, data);
+  saveProject: async (project) => {
+    const { id, ...payload } = project;
+    const created = await addDoc(collection(db, PROJECT_COLLECTION), payload);
+    return created.id;
   },
 
-  saveBlog: (blog) => {
-    const data = get(BLOG_KEY);
-    data.push(blog);
-    set(BLOG_KEY, data);
+  saveBlog: async (blog) => {
+    const { id, ...payload } = blog;
+    const created = await addDoc(collection(db, BLOG_COLLECTION), payload);
+    return created.id;
   },
 
   // ================= DELETE =================
-  deleteProject: (id) => {
-    const data = get(PROJECT_KEY).filter((p) => p.id !== id);
-    set(PROJECT_KEY, data);
+  deleteProject: async (id) => {
+    await deleteDoc(doc(db, PROJECT_COLLECTION, String(id)));
   },
 
-  deleteBlog: (id) => {
-    const data = get(BLOG_KEY).filter((b) => b.id !== id);
-    set(BLOG_KEY, data);
+  deleteBlog: async (id) => {
+    await deleteDoc(doc(db, BLOG_COLLECTION, String(id)));
   },
 
   // ================= UPDATE =================
-  updateProject: (updated) => {
-    const data = get(PROJECT_KEY).map((p) =>
-      p.id === updated.id ? updated : p
-    );
-    set(PROJECT_KEY, data);
+  updateProject: async (updated) => {
+    const { id, ...payload } = updated;
+    await updateDoc(doc(db, PROJECT_COLLECTION, String(id)), payload);
   },
 
-  updateBlog: (updated) => {
-    const data = get(BLOG_KEY).map((b) =>
-      b.id === updated.id ? updated : b
-    );
-    set(BLOG_KEY, data);
+  updateBlog: async (updated) => {
+    const { id, ...payload } = updated;
+    await updateDoc(doc(db, BLOG_COLLECTION, String(id)), payload);
   },
 };
