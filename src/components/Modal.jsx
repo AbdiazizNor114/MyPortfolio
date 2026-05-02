@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { renderMarkdown } from "../services/markdownService";
 
 export default function Modal({
   title,
@@ -93,9 +94,14 @@ export default function Modal({
         )}
 
         {/* CONTENT */}
-        <p className="modal-content">
-          {content || "No content available."}
-        </p>
+        <div
+          className="modal-content"
+          dangerouslySetInnerHTML={{
+            __html: content
+              ? renderMarkdown(content)
+              : "<p>No content available.</p>",
+          }}
+        />
 
       </div>
 

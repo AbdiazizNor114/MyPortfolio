@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { dataService } from "../services/dataService";
+import { renderMarkdown } from "../services/markdownService";
 
 export default function Blog({ selectedBlog, setSelectedBlog }) {
   const [blogs, setBlogs] = useState([]);
@@ -29,9 +30,10 @@ export default function Blog({ selectedBlog, setSelectedBlog }) {
             <small>{selectedBlog.date}</small>
           </div>
 
-          <div className="blog-content">
-            {selectedBlog.content}
-          </div>
+          <div
+            className="blog-content"
+            dangerouslySetInnerHTML={{ __html: renderMarkdown(selectedBlog.content) }}
+          />
 
         </article>
 

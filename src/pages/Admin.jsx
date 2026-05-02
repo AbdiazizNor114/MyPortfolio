@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getDownloadURL, ref, uploadBytesResumable, getStorage } from "firebase/storage";
 import { dataService } from "../services/dataService";
 import { app } from "../firebase";
+import { renderMarkdown } from "../services/markdownService";
 import "../styles/pages/admin.css";
 
 export default function Admin() {
@@ -26,6 +27,7 @@ export default function Admin() {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const [uploadProgress, setUploadProgress] = useState(0);
+  const descRef = useRef(null);
 
   // LOAD DATA
   useEffect(() => {
@@ -58,6 +60,72 @@ export default function Admin() {
     return form.language === "Other"
       ? form.customLanguage
       : form.language;
+  };
+
+  const formatDesc = (type) => {
+    const textarea = descRef.current;
+    if (!textarea) return;
+
+    const { selectionStart, selectionEnd, value } = textarea;
+    const selectedText = value.slice(selectionStart, selectionEnd);
+    let formatted = "";
+
+    switch (type) {
+      case "h1":
+        formatted = `# ${selectedText || "Heading"}\n`;
+        break;
+      case "h2":
+        formatted = `## ${selectedText || "Heading"}\n`;
+        break;
+      case "bold":
+        formatted = `**${selectedText || "Bold text"}**`;
+        break;
+      case "italic":
+        formatted = `*${selectedText || "Italic text"}*`;
+        break;
+      case "underline":
+        formatted = `<u>${selectedText || "Underline text"}</u>`;
+        break;
+      case "list":
+        if (selectedText) {
+          formatted = selectedText
+            .split("\n")
+            .map((line) => `- ${line.replace(/^\s*-?\s*/, "")}`)
+            .join("\n");
+        } else {
+          formatted = "- List item\n- Another item\n";
+        }
+        break;
+      case "quote":
+        if (selectedText) {
+          formatted = selectedText
+            .split("\n")
+            .map((line) => `> ${line}`)
+            .join("\n");
+        } else {
+          formatted = "> Quote text\n";
+        }
+        break;
+      case "fold":
+        formatted = `<details>\n<summary>${selectedText || "Section title"}</summary>\n\n${selectedText ? "" : "More details...\n"}</details>\n`;
+        break;
+      default:
+        formatted = selectedText;
+    }
+
+    const nextValue =
+      value.slice(0, selectionStart) +
+      formatted +
+      value.slice(selectionEnd);
+
+    setForm((prev) => ({ ...prev, desc: nextValue }));
+
+    requestAnimationFrame(() => {
+      textarea.focus();
+      const cursor = selectionStart + formatted.length;
+      textarea.selectionStart = cursor;
+      textarea.selectionEnd = cursor;
+    });
   };
 
   // SAVE (CREATE / UPDATE)
@@ -228,13 +296,32 @@ export default function Admin() {
           />
 
           {/* DESCRIPTION */}
+          <div className="admin-toolbar">
+            <button type="button" onClick={() => formatDesc("h1")}>H1</button>
+            <button type="button" onClick={() => formatDesc("h2")}>H2</button>
+            <button type="button" onClick={() => formatDesc("bold")}>B</button>
+            <button type="button" onClick={() => formatDesc("italic")}>I</button>
+            <button type="button" onClick={() => formatDesc("underline")}>U</button>
+            <button type="button" onClick={() => formatDesc("list")}>List</button>
+            <button type="button" onClick={() => formatDesc("quote")}>Quote</button>
+            <button type="button" onClick={() => formatDesc("fold")}>Fold</button>
+          </div>
           <textarea
+            ref={descRef}
             placeholder="Description"
             value={form.desc}
             onChange={(e) =>
               setForm({ ...form, desc: e.target.value })
             }
           />
+
+          <div className="admin-preview">
+            <div className="admin-preview-header">Preview</div>
+            <div
+              className="admin-preview-box"
+              dangerouslySetInnerHTML={{ __html: renderMarkdown(form.desc) }}
+            />
+          </div>
 
           <input
             placeholder="Media URL or filename (example: demo.mp4 or image.png)"
