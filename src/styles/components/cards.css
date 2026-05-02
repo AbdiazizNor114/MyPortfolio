@@ -85,7 +85,7 @@
 .grid-item,
 .grid-col {
   background: var(--glass);
-  padding: 28px;
+  padding: 36px;
   border-radius: 24px;
   border: 1px solid var(--border);
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -102,6 +102,16 @@
 
 .grid-col:nth-child(1) { animation-delay: 0.1s; }
 .grid-col:nth-child(2) { animation-delay: 0.2s; }
+
+.grid-item h6 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.grid-item p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
 
 .grid-item::before,
 .grid-col::before {

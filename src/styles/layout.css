@@ -83,6 +83,7 @@ header.scrolled {
 }
 
 #About,
+#Skills,
 #portofolio,
 #contact {
   scroll-margin-top: 110px;
@@ -107,6 +108,11 @@ section.container:nth-child(4) { animation-delay: 0.8s; }
   gap: 4rem;
   text-align: center;
   padding: 2rem 0;
+}
+
+.aboutme .intro-text p {
+  font-size: 1.2rem;
+  line-height: 1.8;
 }
 
 .grid-about {
@@ -221,8 +227,8 @@ footer p {
 
 /* OUTER CLEAN RING */
 .img-ring {
-    width: 320px;
-    height: 320px;
+    width: 340px;
+    height: 340px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -252,8 +258,8 @@ footer p {
 
 /* IMAGE FIX */
 .img-ring img {
-    width: 300px;
-    height: 300px;
+    width: 320px;
+    height: 320px;
     border-radius: 50%;
 
     object-fit: cover;

@@ -26,7 +26,7 @@ export default function Hero() {
 
         <div className="person-img">
           <div className="img-ring">
-            <img src="./images/y.JPG" alt="person" />
+            <img src="./images/y.JPG" alt="Abdiaziz Nor - System Developer and AI Enthusiast" />
           </div>
         </div>
       </div>
