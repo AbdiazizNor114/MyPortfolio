@@ -14,11 +14,13 @@ export default function BlogView({ blogs }) {
           <p>No blogs yet...</p>
         ) : (
           blogs.map((b) => (
-            <div key={b.id} className="grid-col blog-card" onClick={() => setSelected(b)} style={{ cursor: "pointer" }}>
+            <div key={b.id} className="blog-card" onClick={() => setSelected(b)} style={{ cursor: "pointer" }}>
+              {b.media && (
+                <img src={b.media} alt={b.title} className="blog-media" />
+              )}
               <h3>{b.title}</h3>
-              <small>{b.date || "No date"}</small>
               <p>{(b.content || b.desc || "").slice(0, 140)}...</p>
-              <span className="tech-stack">READ MORE →</span>
+              <span className="blog-date">{b.date || "No date"}</span>
             </div>
           ))
         )}

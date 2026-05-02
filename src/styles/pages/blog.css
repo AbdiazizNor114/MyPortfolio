@@ -1,16 +1,108 @@
 .blog-view {
-  padding-top: 150px;
+  padding-top: 180px;
+  padding-bottom: 80px;
+  min-height: 100vh;
 }
 
 .blog-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 30px;
-  margin-top: 40px;
+  margin-top: 60px;
 }
 
 .blog-card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 18px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.blog-card:nth-child(1) { animation-delay: 0.1s; }
+.blog-card:nth-child(2) { animation-delay: 0.2s; }
+.blog-card:nth-child(3) { animation-delay: 0.3s; }
+.blog-card:nth-child(4) { animation-delay: 0.4s; }
+.blog-card:nth-child(5) { animation-delay: 0.5s; }
+.blog-card:nth-child(6) { animation-delay: 0.6s; }
+
+.blog-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 118, 255, 0.1), transparent);
+  transition: left 0.6s ease;
+}
+
+.blog-card:hover::before {
+  left: 100%;
+}
+
+.blog-card:hover {
+  transform: translateY(-12px) scale(1.02);
+  border-color: var(--glow);
+  box-shadow: 0 20px 60px rgba(0, 71, 171, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.blog-card h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-beige);
+  transition: color 0.3s ease;
+}
+
+.blog-card:hover h3 {
+  color: var(--glow);
+}
+
+.blog-card p {
+  color: rgba(245, 245, 220, 0.8);
+  line-height: 1.6;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.blog-date {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--glow);
+  text-transform: uppercase;
+  margin-top: auto;
+}
+
+.blog-media {
+  width: 100%;
+  height: 200px;
+  border-radius: 12px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.blog-card:hover .blog-media {
+  transform: scale(1.05);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -10,8 +10,14 @@ header {
   top: 0;
   z-index: 1000;
   backdrop-filter: blur(20px);
-  background: rgba(7, 9, 13, 0.7);
+  background: rgba(7, 9, 13, 0.8);
   border-bottom: 1px solid var(--border);
+  transition: all 0.3s ease;
+}
+
+header.scrolled {
+  background: rgba(7, 9, 13, 0.95);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .navbar {
@@ -19,12 +25,20 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 30px;
 }
 
 .logo {
   height: 45px;
-  transition: 0.3s;
+  transition: all 0.3s ease;
   filter: drop-shadow(0 0 5px rgba(0, 71, 171, 0.5));
+}
+
+.logo:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 10px rgba(0, 71, 171, 0.8));
 }
 
 .nav-links {
@@ -42,12 +56,30 @@ header {
   text-transform: uppercase;
   letter-spacing: 3px;
   opacity: 0.6;
-  transition: 0.4s;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--glow);
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+  width: 100%;
 }
 
 .nav-links a:hover {
   opacity: 1;
   color: var(--glow);
+  transform: translateY(-2px);
 }
 
 #About,
@@ -58,32 +90,47 @@ header {
 
 section.container {
   margin-top: 120px;
+  opacity: 0;
+  animation: fadeInSection 1s ease-out forwards;
 }
 
+section.container:nth-child(1) { animation-delay: 0.2s; }
+section.container:nth-child(2) { animation-delay: 0.4s; }
+section.container:nth-child(3) { animation-delay: 0.6s; }
+section.container:nth-child(4) { animation-delay: 0.8s; }
+
 .aboutme {
-  margin-top: 8.875rem;
+  margin-top: 6rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5rem;
+  gap: 4rem;
+  text-align: center;
+  padding: 2rem 0;
 }
 
 .grid-about {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 60px;
+  width: 100%;
+  max-width: 1000px;
 }
 
 .columns-wrapper {
   display: flex;
   flex-direction: column;
   gap: 30px;
+  text-align: left;
 }
 
 .contact form {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  max-width: 100%;
+  margin: 0;
+  align-items: flex-start;
 }
 
 form input,
@@ -94,9 +141,34 @@ form textarea {
   padding: 20px;
   border-radius: 12px;
   color: #fff;
-  margin-bottom: 15px;
   font-family: inherit;
-  transition: 0.3s;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+form input:focus,
+form textarea:focus {
+  outline: none;
+  border-color: var(--glow);
+  box-shadow: 0 0 20px rgba(0, 118, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+form input::placeholder,
+form textarea::placeholder {
+  color: rgba(245, 245, 220, 0.5);
+}
+
+@keyframes fadeInSection {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 form input:focus,
@@ -139,4 +211,65 @@ footer p {
   font-size: 10px;
   letter-spacing: 5px;
   opacity: 0.3;
+}
+
+.person-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* OUTER CLEAN RING */
+.img-ring {
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: radial-gradient(
+        circle,
+        rgba(0, 71, 171, 0.08),
+        transparent 65%
+    );
+
+    position: relative;
+
+    /* subtle premium motion (not aggressive) */
+    animation: floatSoft 6s ease-in-out infinite;
+}
+
+/* SIMPLE GLOW BORDER (NO SPINNING CHAOS) */
+.img-ring::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 118, 255, 0.25);
+    box-shadow: 0 0 20px rgba(0, 71, 171, 0.2);
+}
+
+/* IMAGE FIX */
+.img-ring img {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+
+    object-fit: cover;
+    object-position: center;
+
+    /* IMPORTANT FIX: center face properly */
+    display: block;
+
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes floatSoft {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }

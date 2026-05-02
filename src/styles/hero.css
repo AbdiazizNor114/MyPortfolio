@@ -1,24 +1,33 @@
 .hero {
-  padding-top: 220px;
-  padding-bottom: 100px;
+  padding-top: 200px;
+  padding-bottom: 120px;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .hero-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
 
 .hero-top .content {
   display: flex;
   flex-direction: column;
   gap: 3rem;
+  flex: 1;
+  max-width: 600px;
 }
 
 .info h1 {
   margin-bottom: 1.375rem;
   font-size: 2rem;
   font-weight: 700;
+  opacity: 0;
+  animation: fadeInUp 1s ease-out 0.3s forwards;
 }
 
 .info h2 {
@@ -31,6 +40,8 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin: 15px 0;
+  opacity: 0;
+  animation: fadeInUp 1s ease-out 0.5s forwards;
 }
 
 .glow-text {
@@ -38,68 +49,137 @@
   font-weight: 800;
   letter-spacing: 2px;
   text-transform: uppercase;
+  opacity: 0;
+  animation: fadeInUp 1s ease-out 0.7s forwards;
 }
 
 .contact-me {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   gap: 1rem;
+  opacity: 0;
+  animation: fadeInUp 1s ease-out 0.9s forwards;
+  margin-top: 1rem;
 }
 
 .contact-me a {
   text-decoration: none;
   color: black;
+  transition: transform 0.3s ease;
+}
+
+.contact-me a:hover {
+  transform: translateY(-3px);
 }
 
 .contact-me i {
   background-color: #c4c4c4;
   padding: 0.625rem 0.75rem;
   border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
+
+.contact-me i:hover {
+  background-color: var(--glow);
+  transform: scale(1.1);
+}
+
+
 
 .person-img {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex: 1;
+  max-width: 400px;
+  min-height: 400px;
 }
 
 .img-ring {
-  width: 380px;
-  height: 380px;
+  width: 280px;
+  height: 280px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: radial-gradient(circle, rgba(0, 71, 171, 0.15), transparent 65%);
   position: relative;
-  animation: floatSoft 6s ease-in-out infinite;
+  background: radial-gradient(circle, rgba(0, 71, 171, 0.15), transparent 65%);
+  animation: floatSoft 6s ease-in-out infinite, fadeInScale 1.2s ease-out 1s forwards;
+  opacity: 0;
+  transform: scale(0.8);
 }
 
+/* MAIN GLOW DOT (strong) */
 .img-ring::before {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -10px;
   border-radius: 50%;
-  border: 1px solid rgba(0, 118, 255, 0.35);
-  box-shadow: 0 0 25px rgba(0, 71, 171, 0.25);
+
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(0, 118, 255, 1) 20deg,
+    transparent 40deg
+  );
+
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 0);
+  mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 0);
+
+  animation: spin 4s linear infinite;
+}
+
+/* SECONDARY GLOW (weaker follower) */
+.img-ring::after {
+  content: "";
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+
+  background: conic-gradient(
+    from 180deg,
+    transparent 0deg,
+    rgba(0, 118, 255, 0.4) 25deg,
+    transparent 60deg
+  );
+
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 10px), #000 0);
+  mask: radial-gradient(farthest-side, transparent calc(100% - 10px), #000 0);
+
+  animation: spin 6s linear infinite;
 }
 
 .img-ring img {
-  width: 340px;
-  height: 340px;
+  width: 250px;
+  height: 250px;
   border-radius: 50%;
   object-fit: cover;
-  object-position: center;
-  display: block;
+  z-index: 2;
+  position: relative;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  transition: transform 0.3s ease;
+}
+
+.img-ring:hover img {
+  transform: scale(1.05);
+}
+
+/* animations */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes floatSoft {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
+  0%, 100% { transform: translateY(0) scale(0.8); }
+  50% { transform: translateY(-10px) scale(0.82); }
+}
+
+@keyframes fadeInScale {
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
