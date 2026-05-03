@@ -3,9 +3,15 @@ import React from "react";
 import ThemeToggle from "./ThemeToggle";
 
 export default function Navbar({ menuOpen, setMenuOpen, setView }) {
-  const navigate = (view) => {
+  const navigate = (view, scrollToTop = false) => {
     setView(view);
     setMenuOpen(false);
+
+    if (scrollToTop) {
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    }
   };
 
   return (
@@ -15,7 +21,7 @@ export default function Navbar({ menuOpen, setMenuOpen, setView }) {
           src="./images/svg/abdiaziz-nor-minimal-monogram.svg"
           alt="logo"
           className="logo"
-          onClick={() => navigate("portfolio")}
+          onClick={() => navigate("portfolio", true)}
           style={{ cursor: "pointer" }}
         />
 
@@ -29,8 +35,8 @@ export default function Navbar({ menuOpen, setMenuOpen, setView }) {
           <li><a href="#About" onClick={() => navigate("portfolio")}>About</a></li>
           <li><a href="#Services" onClick={() => navigate("portfolio")}>Services</a></li>
           <li><a href="#Skills" onClick={() => navigate("portfolio")}>Skills</a></li>
-          <li><a onClick={() => navigate("projects")}>Projects</a></li>
-          <li><a onClick={() => navigate("blog")}>Blog</a></li>
+          <li><a onClick={() => navigate("projects", true)}>Projects</a></li>
+          <li><a onClick={() => navigate("blog", true)}>Blog</a></li>
           <ThemeToggle />
           <a className="btn" href="#contact" onClick={() => setMenuOpen(false)}>Contact Me</a>
         </ul>
