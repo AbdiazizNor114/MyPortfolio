@@ -1,0 +1,145 @@
+/* ================================
+   EXPERIENCE SECTION
+================================ */
+.experience {
+  padding: 80px 0;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+.experience h4 {
+  text-align: center;
+  margin-bottom: 60px;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ================================
+   EXPERIENCE TIMELINE
+================================ */
+.experience-timeline {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.experience-timeline::before {
+  content: '';
+  position: absolute;
+  left: 30px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.experience-item {
+  position: relative;
+  margin-bottom: 40px;
+  padding-left: 80px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 30px 30px 30px 80px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.experience-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+}
+
+.experience-item::before {
+  content: '';
+  position: absolute;
+  left: 23px;
+  top: 30px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: 3px solid #1e293b;
+}
+
+/* ================================
+   EXPERIENCE HEADER
+================================ */
+.experience-header {
+  margin-bottom: 15px;
+}
+
+.experience-header h5 {
+  font-size: 1.4rem;
+  margin: 0 0 5px 0;
+  color: #e2e8f0;
+}
+
+.company {
+  display: block;
+  font-weight: 600;
+  color: #667eea;
+  margin-bottom: 5px;
+}
+
+.period {
+  display: block;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-style: italic;
+}
+
+/* ================================
+   DESCRIPTION
+================================ */
+.description {
+  color: #cbd5e1;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+/* ================================
+   TECHNOLOGIES
+================================ */
+.technologies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tech-tag {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: transform 0.2s ease;
+}
+
+.tech-tag:hover {
+  transform: scale(1.05);
+}
+
+/* ================================
+   RESPONSIVE DESIGN
+================================ */
+@media (max-width: 768px) {
+  .experience-item {
+    padding-left: 60px;
+  }
+
+  .experience-timeline::before {
+    left: 20px;
+  }
+
+  .experience-item::before {
+    left: 13px;
+  }
+
+  .technologies {
+    justify-content: center;
+  }
+}

@@ -3,7 +3,11 @@
 @import "./styles/hero.css";
 @import "./styles/components/buttons.css";
 @import "./styles/components/cards.css";
+@import "./styles/components/chatbot.css";
+@import "./styles/components/experience.css";
+@import "./styles/components/loading.css";
 @import "./styles/components/modal.css";
+@import "./styles/components/services.css";
 @import "./styles/pages/blog.css";
 @import "./styles/pages/projects.css";
 @import "./styles/pages/admin.css";

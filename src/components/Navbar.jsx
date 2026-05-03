@@ -1,5 +1,7 @@
 import React from "react";
 
+import ThemeToggle from "./ThemeToggle";
+
 export default function Navbar({ menuOpen, setMenuOpen, setView }) {
   const navigate = (view) => {
     setView(view);
@@ -25,9 +27,11 @@ export default function Navbar({ menuOpen, setMenuOpen, setView }) {
 
         <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
           <li><a href="#About" onClick={() => navigate("portfolio")}>About</a></li>
+          <li><a href="#Services" onClick={() => navigate("portfolio")}>Services</a></li>
           <li><a href="#Skills" onClick={() => navigate("portfolio")}>Skills</a></li>
           <li><a onClick={() => navigate("projects")}>Projects</a></li>
           <li><a onClick={() => navigate("blog")}>Blog</a></li>
+          <ThemeToggle />
           <a className="btn" href="#contact" onClick={() => setMenuOpen(false)}>Contact Me</a>
         </ul>
       </nav>
