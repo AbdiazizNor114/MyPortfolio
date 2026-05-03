@@ -54,6 +54,7 @@ header.scrolled {
 .theme-toggle {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-beige);
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -64,6 +65,10 @@ header.scrolled {
   font-size: 18px;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
+}
+
+.theme-toggle svg {
+  pointer-events: none;
 }
 
 .theme-toggle:hover {
@@ -171,7 +176,7 @@ form textarea {
   border: 1px solid var(--border);
   padding: 20px;
   border-radius: 12px;
-  color: var(--text-beige);
+  color: inherit;
   font-family: inherit;
   font-size: 16px;
   transition: all 0.3s ease;
@@ -230,7 +235,7 @@ footer {
 
 .social i {
   transition: 0.3s;
-  color: var(--text-beige);
+  color: inherit;
 }
 
 .social i:hover {

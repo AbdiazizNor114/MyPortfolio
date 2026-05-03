@@ -1,36 +1,37 @@
 import React from "react";
+import { Bot, Cloud, Database, Gauge, Rocket, Wrench } from "lucide-react";
 
 const SERVICES = [
   {
-    icon: "🚀",
+    Icon: Rocket,
     title: "Backend Development",
-    description: "Building scalable APIs, microservices, and robust server-side applications with modern technologies."
+    description: "Building scalable APIs, microservices, and robust server-side applications with modern technologies.",
   },
   {
-    icon: "🤖",
+    Icon: Bot,
     title: "AI & Machine Learning",
-    description: "Implementing ML solutions, data analysis, and intelligent systems to solve complex problems."
+    description: "Implementing ML solutions, data analysis, and intelligent systems to solve complex problems.",
   },
   {
-    icon: "⚡",
+    Icon: Gauge,
     title: "System Optimization",
-    description: "Performance tuning, debugging, and optimization of existing systems for better efficiency."
+    description: "Performance tuning, debugging, and optimization of existing systems for better efficiency.",
   },
   {
-    icon: "🔧",
+    Icon: Wrench,
     title: "API Development",
-    description: "Designing and developing RESTful APIs, GraphQL endpoints, and third-party integrations."
+    description: "Designing and developing RESTful APIs, GraphQL endpoints, and third-party integrations.",
   },
   {
-    icon: "📊",
+    Icon: Database,
     title: "Database Design",
-    description: "Creating efficient database schemas, query optimization, and data management solutions."
+    description: "Creating efficient database schemas, query optimization, and data management solutions.",
   },
   {
-    icon: "☁️",
+    Icon: Cloud,
     title: "Cloud Solutions",
-    description: "Deploying and managing applications on cloud platforms with scalable infrastructure."
-  }
+    description: "Deploying and managing applications on cloud platforms with scalable infrastructure.",
+  },
 ];
 
 export default function Services() {
@@ -42,11 +43,13 @@ export default function Services() {
       </p>
 
       <div className="services-grid">
-        {SERVICES.map((service, index) => (
-          <div key={index} className="service-card">
-            <div className="service-icon">{service.icon}</div>
-            <h5>{service.title}</h5>
-            <p>{service.description}</p>
+        {SERVICES.map(({ Icon, title, description }) => (
+          <div key={title} className="service-card">
+            <div className="service-icon" aria-hidden="true">
+              <Icon size={36} strokeWidth={1.8} />
+            </div>
+            <h5>{title}</h5>
+            <p>{description}</p>
           </div>
         ))}
       </div>

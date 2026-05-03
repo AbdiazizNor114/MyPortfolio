@@ -58,9 +58,10 @@
    SERVICE ICON
 ================================ */
 .service-icon {
-  font-size: 3rem;
   margin-bottom: 20px;
-  display: block;
+  display: flex;
+  justify-content: center;
+  color: var(--glow);
 }
 
 /* ================================
@@ -97,6 +98,6 @@
   }
 
   .service-icon {
-    font-size: 2.5rem;
+    margin-bottom: 16px;
   }
 }

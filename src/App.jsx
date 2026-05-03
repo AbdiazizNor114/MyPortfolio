@@ -15,7 +15,6 @@ import ResumeDownload from "./components/ResumeDownload";
 import SEO from "./components/SEO";
 import Services from "./components/Services";
 import Skills from "./components/Skills";
-import ThemeToggle from "./components/ThemeToggle";
 import { dataService } from "./services/dataService";
 import { useLocation } from "react-router-dom";
 
@@ -60,7 +59,6 @@ export default function App() {
       />
       <Analytics />
       <Navbar menuOpen={menuOpen} setMenuOpen={setMenuOpen} setView={setView} />
-      <ThemeToggle />
 
       {view === "portfolio" && (
         <main>
