@@ -66,6 +66,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   line-height: 1.2;
   margin-bottom: 1rem;
+  color: inherit;
 }
 
 h1 {
@@ -90,12 +91,12 @@ h4 {
 }
 
 p {
-  color: rgba(245, 245, 220, 0.8);
+  color: inherit;
   line-height: 1.7;
 }
 
 a {
-  
+  color: inherit;
   text-decoration: none;
   transition: var(--transition);
 }
