@@ -1,93 +1,53 @@
-import { useState, useEffect, useRef } from "react";
+import { MessageCircle, Send, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+
+const WELCOME_MESSAGE = {
+  text: "Hi! I'm Abdiaziz. Ask me about my portfolio, projects, skills, or backend and AI work.",
+  sender: "bot",
+};
 
 export default function Chatbot() {
-  const [messages, setMessages] = useState([
-    {
-      text: "Hi! 👋 I'm Abdiaziz AI Assistant trained with real AI. Ask me anything about my portfolio, projects, or anything else!",
-      sender: "bot",
-    },
-  ]);
+  const [messages, setMessages] = useState([WELCOME_MESSAGE]);
   const [input, setInput] = useState("");
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages, isLoading]);
-
   const messagesEndRef = useRef(null);
 
-  const handleSend = async () => {
-    if (!input.trim()) return;
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isLoading]);
 
-    const userMsg = { text: input, sender: "user" };
-    setMessages((prev) => [...prev, userMsg]);
+  const handleSend = async () => {
+    const trimmedInput = input.trim();
+    if (!trimmedInput || isLoading) return;
+
+    const nextMessages = [...messages, { text: trimmedInput, sender: "user" }];
+
+    setMessages(nextMessages);
     setInput("");
     setIsLoading(true);
 
     try {
-      const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
-
-      if (!apiKey) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: "⚠️ API key not configured. Please set VITE_OPENAI_API_KEY in your .env.local file.",
-            sender: "bot",
-          },
-        ]);
-        setIsLoading(false);
-        return;
-      }
-
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
         },
-        body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          messages: [
-            {
-              role: "system",
-              content:
-                "You are Abdiaziz Nor, a System Developer specializing in backend development. You focus on designing scalable systems, building efficient APIs, and writing clean, maintainable code. You enjoy solving complex problems and turning ideas into reliable, high-performance applications. You work with Python, Java, C#, Dart, TypeScript, JavaScript, Node.js, databases, machine learning, API development, and GitHub. You have built various projects including ML applications and system development work. Answer questions as if you are the portfolio owner - speak in first person, be friendly, and provide detailed information about your skills, projects, and experience. Never mention being an AI assistant or OpenAI - just be yourself, the developer behind this portfolio.",
-            },
-            ...messages
-              .filter((msg) => msg.sender !== undefined)
-              .map((msg) => ({
-                role: msg.sender === "user" ? "user" : "assistant",
-                content: msg.text,
-              })),
-            { role: "user", content: input },
-          ],
-          temperature: 0.7,
-          max_tokens: 500,
-        }),
+        body: JSON.stringify({ messages: nextMessages }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error?.message || "API request failed");
+        throw new Error(data.error || "Chat request failed.");
       }
 
-      const data = await response.json();
-      const botMsg = {
-        text: data.choices[0].message.content,
-        sender: "bot",
-      };
-
-      setMessages((prev) => [...prev, botMsg]);
+      setMessages((prev) => [...prev, { text: data.text, sender: "bot" }]);
     } catch (error) {
-      console.error("Chatbot error:", error);
       setMessages((prev) => [
         ...prev,
         {
-          text: `Sorry, I encountered an error: ${error.message}. Please check your API key and try again.`,
+          text: `Sorry, the chat could not answer right now. ${error.message}`,
           sender: "bot",
         },
       ]);
@@ -96,28 +56,29 @@ export default function Chatbot() {
     }
   };
 
-
   return (
     <>
-      <div className="chat-toggle" onClick={() => setOpen(!open)}>
-        💬
-      </div>
+      <button
+        className="chat-toggle"
+        onClick={() => setOpen((current) => !current)}
+        aria-label="Toggle chat"
+        type="button"
+      >
+        <MessageCircle size={24} />
+      </button>
 
       {open && (
         <div className="chatbox">
           <div className="chat-header">
             <h3>Chat with me</h3>
-            <button 
-              onClick={() => setOpen(false)}
-              className="close-btn"
-            >
-              ✕
+            <button onClick={() => setOpen(false)} className="close-btn" aria-label="Close chat" type="button">
+              <X size={18} />
             </button>
           </div>
-          
+
           <div className="messages">
-            {messages.map((msg, i) => (
-              <div key={i} className={`message ${msg.sender}`}>
+            {messages.map((msg, index) => (
+              <div key={`${msg.sender}-${index}`} className={`message ${msg.sender}`}>
                 {msg.text}
               </div>
             ))}
@@ -135,17 +96,13 @@ export default function Chatbot() {
           <div className="input-area">
             <input
               value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && !isLoading && handleSend()}
+              onChange={(event) => setInput(event.target.value)}
+              onKeyDown={(event) => event.key === "Enter" && handleSend()}
               placeholder="Ask me anything..."
               disabled={isLoading}
             />
-            <button
-              onClick={handleSend}
-              className="send-btn"
-              disabled={isLoading}
-            >
-              {isLoading ? "..." : "Send"}
+            <button onClick={handleSend} className="send-btn" disabled={isLoading || !input.trim()} type="button">
+              {isLoading ? "..." : <Send size={16} />}
             </button>
           </div>
         </div>

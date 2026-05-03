@@ -11,7 +11,6 @@ import Footer from "./components/Footer";
 import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
 import ProjectsView from "./components/ProjectsView";
-import ResumeDownload from "./components/ResumeDownload";
 import SEO from "./components/SEO";
 import Services from "./components/Services";
 import Skills from "./components/Skills";

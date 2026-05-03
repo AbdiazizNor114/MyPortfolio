@@ -160,14 +160,32 @@
   }
 
   .hero {
-    padding-top: 150px;
-    padding-bottom: 60px;
+    min-height: auto;
+    padding-top: 120px;
+    padding-bottom: 50px;
   }
 
   .hero-top {
     flex-direction: column;
     text-align: center;
-    gap: 40px;
+    gap: 22px;
+  }
+
+  .hero-top .content {
+    gap: 1.25rem;
+    align-items: center;
+  }
+
+  .glow-text {
+    margin-bottom: 0;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    letter-spacing: 1px;
+  }
+
+  .person-img {
+    min-height: auto;
+    margin-top: 4px;
   }
 
   .info h1 {
@@ -223,6 +241,8 @@
   .contact-me {
     gap: 0.5rem;
     justify-content: center;
+    align-items: center;
+    margin-top: 0;
   }
 
   .contact-me i {
@@ -326,12 +346,12 @@
   }
 
   .hero {
-    padding-top: 110px;
-    padding-bottom: 40px;
+    padding-top: 96px;
+    padding-bottom: 36px;
   }
 
   .hero-top {
-    gap: 30px;
+    gap: 18px;
   }
 
   .info h1 {
@@ -340,6 +360,7 @@
 
   .info h2 {
     font-size: 2.5rem;
+    margin: 10px 0;
   }
 
   .img-ring {

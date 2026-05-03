@@ -1,7 +1,5 @@
 import React from "react";
 
-import ResumeDownload from "./ResumeDownload";
-
 export default function Hero() {
   return (
     <section className="hero container">
@@ -11,7 +9,6 @@ export default function Hero() {
             <h1>Hi, I am</h1>
             <h2>ABDIAZIZ<br />NOR</h2>
             <h6 className="glow-text">I solve real problems using AI & backend systems | Aspiring AI Enthusiast</h6>
-            <ResumeDownload />
           </div>
 
           <div className="contact-me">
