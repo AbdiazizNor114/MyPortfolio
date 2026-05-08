@@ -15,7 +15,7 @@ export default function Hero() {
             <a href="https://wa.link/uonz28" target="_blank" rel="noopener noreferrer">
               <i className="fa-brands fa-whatsapp"></i>
             </a>
-            <a href="#" target="_blank" rel="noopener noreferrer">
+            <a href="https://www.linkedin.com/in/abdiaziiz-abdullahi-066a74232/" target="_blank" rel="noopener noreferrer">
               <i className="fa-brands fa-linkedin"></i>
             </a>
             <a href="https://github.com/AbdiazizNor114" target="_blank" rel="noopener noreferrer">
