@@ -26,10 +26,10 @@
   bottom: 80px;
   right: 20px;
   width: 350px;
-  max-height: 500px;
+  max-height: min(560px, calc(100vh - 110px));
   background: var(--bg-dark);
   color: var(--text-beige);
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 0;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   border: 1px solid var(--border);
@@ -45,7 +45,7 @@
   padding: 15px;
   border-bottom: 1px solid var(--border);
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 12px 12px 0 0;
+  border-radius: 8px 8px 0 0;
 }
 
 .chat-header h3 {
@@ -87,6 +87,7 @@
   border-radius: 8px;
   word-wrap: break-word;
   max-width: 85%;
+  white-space: pre-wrap;
   animation: slideIn 0.3s ease;
 }
 
@@ -123,6 +124,29 @@
   border-top: 1px solid var(--border);
 }
 
+.quick-questions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 12px 12px;
+}
+
+.quick-questions button {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-beige);
+  font-size: 12px;
+  line-height: 1.2;
+  padding: 8px 10px;
+  text-align: left;
+}
+
+.quick-questions button:hover {
+  border-color: rgba(102, 126, 234, 0.6);
+  color: var(--glow);
+}
+
 .input-area input {
   flex: 1;
   background: var(--glass);
@@ -138,6 +162,20 @@
   outline: none;
   border-color: rgba(102, 126, 234, 0.6);
   background: var(--glass);
+}
+
+@media (max-width: 480px) {
+  .chatbox {
+    bottom: 74px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+  }
+
+  .chat-toggle {
+    bottom: 16px;
+    right: 16px;
+  }
 }
 
 .input-area input::placeholder {
