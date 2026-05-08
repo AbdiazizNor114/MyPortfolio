@@ -8,7 +8,7 @@ export default function Footer() {
           <a href="https://github.com/AbdiazizNor114" target="_blank" rel="noopener noreferrer">
             <i className="fab fa-github"></i>
           </a>
-          <a href="https://www.linkedin.com/in/abdiaziz-nor-1b2b1b1b1/" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.linkedin.com/in/abdiaziiz-abdullahi-066a74232/" target="_blank" rel="noopener noreferrer">
             <i className="fab fa-linkedin"></i>
           </a>
         </div>
