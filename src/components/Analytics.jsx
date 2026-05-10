@@ -1,28 +1,41 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from "react";
+import { getAnalytics, isSupported, logEvent } from "firebase/analytics";
+import { app } from "../firebase";
 
-// Replace with your actual Google Analytics Measurement ID
-const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+export default function Analytics({ pageName }) {
+  const analyticsRef = useRef(null);
 
-export default function Analytics() {
   useEffect(() => {
-    // Load Google Analytics script
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
-    document.head.appendChild(script);
+    let cancelled = false;
+    const pagePath = pageName === "portfolio" ? "/" : `/${pageName}`;
 
-    // Initialize Google Analytics
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', GA_MEASUREMENT_ID);
+    async function trackPageView() {
+      if (typeof window === "undefined") return;
 
-    // Track page views
-    gtag('config', GA_MEASUREMENT_ID, {
-      page_title: document.title,
-      page_location: window.location.href
+      const supported = await isSupported();
+      if (!supported || cancelled) return;
+
+      const analytics = analyticsRef.current || getAnalytics(app);
+      analyticsRef.current = analytics;
+
+      logEvent(analytics, "page_view", {
+        page_title: document.title,
+        page_location: `${window.location.origin}${pagePath}`,
+        page_path: pagePath,
+        portfolio_view: pageName,
+      });
+    }
+
+    trackPageView().catch((error) => {
+      if (import.meta.env.DEV) {
+        console.warn("Analytics page view was not sent.", error);
+      }
     });
-  }, []);
 
-  return null; // This component doesn't render anything
+    return () => {
+      cancelled = true;
+    };
+  }, [pageName]);
+
+  return null;
 }

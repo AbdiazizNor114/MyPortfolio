@@ -11,6 +11,17 @@
   margin-top: 60px;
 }
 
+.blog-list .empty-text {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--glass);
+  color: var(--text-beige);
+  opacity: 0.78;
+}
+
 .blog-card {
   background: var(--glass);
   border: 1px solid var(--border);

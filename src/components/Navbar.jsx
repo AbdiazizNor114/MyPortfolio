@@ -8,9 +8,10 @@ export default function Navbar({ menuOpen, setMenuOpen, setView }) {
     action();
   };
 
-  const navigate = (view, scrollToTop = false) => {
+  const navigate = (view, hash, scrollToTop = false) => {
     setView(view);
     setMenuOpen(false);
+    window.history.pushState(null, "", hash);
 
     if (scrollToTop) {
       requestAnimationFrame(() => {
@@ -22,9 +23,12 @@ export default function Navbar({ menuOpen, setMenuOpen, setView }) {
   const navigateToSection = (sectionId) => {
     setView("portfolio");
     setMenuOpen(false);
+    window.history.pushState(null, "", `#${sectionId}`);
 
     requestAnimationFrame(() => {
-      document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
+      requestAnimationFrame(() => {
+        document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
+      });
     });
   };
 
@@ -35,7 +39,7 @@ export default function Navbar({ menuOpen, setMenuOpen, setView }) {
           src="./images/svg/abdiaziz-nor-minimal-monogram.svg"
           alt="logo"
           className="logo"
-          onClick={() => navigate("portfolio", true)}
+          onClick={() => navigate("portfolio", "#", true)}
           style={{ cursor: "pointer" }}
         />
 
@@ -68,12 +72,22 @@ export default function Navbar({ menuOpen, setMenuOpen, setView }) {
             </a>
           </li>
           <li>
-            <a href="#projects" onClick={(event) => handleNavClick(event, () => navigate("projects", true))}>
+            <a
+              href="#education"
+              onClick={(event) =>
+                handleNavClick(event, () => navigate("education", "#education", true))
+              }
+            >
+              Education
+            </a>
+          </li>
+          <li>
+            <a href="#projects" onClick={(event) => handleNavClick(event, () => navigate("projects", "#projects", true))}>
               Projects
             </a>
           </li>
           <li>
-            <a href="#blog" onClick={(event) => handleNavClick(event, () => navigate("blog", true))}>
+            <a href="#blog" onClick={(event) => handleNavClick(event, () => navigate("blog", "#blog", true))}>
               Blog
             </a>
           </li>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import Modal from "./Modal";
 
-export default function BlogView({ blogs }) {
+export default function BlogView({ blogs, hasError = false }) {
   const [selected, setSelected] = useState(null);
 
   return (
@@ -11,7 +11,11 @@ export default function BlogView({ blogs }) {
 
       <div className="blog-list">
         {blogs.length === 0 ? (
-          <p>No blogs yet...</p>
+          <p className="empty-text">
+            {hasError
+              ? "Blog posts could not be loaded right now. Please try again soon."
+              : "No blogs yet..."}
+          </p>
         ) : (
           blogs.map((b) => (
             <div key={b.id} className="blog-card" onClick={() => setSelected(b)} style={{ cursor: "pointer" }}>
