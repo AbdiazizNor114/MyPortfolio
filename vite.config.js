@@ -9,4 +9,14 @@ export default defineConfig({
       "/api": "http://127.0.0.1:8787",
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          firebase: ['firebase/app', 'firebase/firestore'],
+          react: ['react', 'react-dom', 'react-router-dom'],
+        },
+      },
+    },
+  },
 })
