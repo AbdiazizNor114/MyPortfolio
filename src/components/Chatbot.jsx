@@ -2,53 +2,176 @@ import { MessageCircle, Send, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const WELCOME_MESSAGE = {
-  text: "Hi! I'm Abdiaziz. Ask me about my services, projects, skills, backend work, or AI automation ideas.",
+  text: "Hi, I'm Abdiaziz. Ask me about my skills, education, projects, AI automation, backend/API work, or how to contact me.",
   sender: "bot",
 };
 
 const QUICK_QUESTIONS = [
-  "What services do you offer?",
-  "How can AI automation help my business?",
-  "What tech stack do you use?",
+  "What are your strongest skills?",
+  "What can you build for a client?",
+  "Tell me about your AI and ML experience",
 ];
 
 const PORTFOLIO_FACTS = {
+  intro:
+    "I'm Abdiaziz Nor, a System Developer and AI enthusiast based in Sweden. I focus on backend systems, APIs, React frontends, Firebase-backed apps, and practical AI automation.",
   services:
-    "I offer AI automation, backend development, AI and machine learning, API development, database design, system optimization, and cloud solutions.",
+    "I can help with backend development, REST API design, Firebase/Firestore data flows, React portfolio or business websites, AI automation, dashboard-style admin tools, and performance/debugging improvements.",
   aiAutomation:
-    "For AI automation, I can build workflow agents, tool integrations, smart reporting, document summarizers, customer-support helpers, and backend automations that connect APIs and databases.",
+    "My AI automation focus is practical: workflow assistants, document summarizers, support/chat helpers, smart reporting, API-connected automations, and tools that reduce repetitive admin work.",
+  ml:
+    "My machine learning work is Python-based and connected to my data science studies. I focus on data analysis, model training basics, classification/regression concepts, and using ML features inside useful applications instead of only theory.",
   skills:
-    "My technical skills include Python, Java, C#, Dart, TypeScript, JavaScript, Node.js, databases, API development, machine learning, and GitHub workflows.",
+    "My stack includes React, Tailwind CSS, JavaScript, TypeScript, Node.js, Firebase Firestore, MongoDB, Python, Java, C#, Dart, Flutter, API development, Git, GitHub, and Python-based machine learning.",
+  databases:
+    "The databases I currently list are Firebase Firestore and MongoDB. Firestore fits real-time portfolio/admin content, while MongoDB is useful for document-based backend APIs.",
+  projects:
+    "This portfolio itself is one of my live projects: React 18, Vite, Tailwind CSS, Firebase, EmailJS, React Router, an admin panel, blog content, and a custom domain. The project section can show more work as I publish it.",
+  education:
+    "I'm studying Information Systems with a Data Science focus at Hogskolan Dalarna. Relevant courses include AI, Data Science & Machine Learning, Database Systems, Dynamic Web Applications, Responsive Web Design, and IT Project Management. I also completed CCNA: Introduction to Networks.",
   contact:
-    "You can contact me through the contact form on this portfolio, WhatsApp from the hero section, or GitHub at AbdiazizNor114.",
+    "You can contact me through the contact form on this portfolio, WhatsApp from the hero section, LinkedIn, or GitHub at AbdiazizNor114.",
   background:
-    "I am a system developer focused on backend systems, APIs, scalable architecture, clean code, machine learning, and AI-powered tools.",
+    "I'm a System Developer student building toward backend, AI, and full-stack work. I like turning practical problems into clean, working applications with clear data flow and maintainable code.",
+  availability:
+    "I'm open to internships, junior developer opportunities, portfolio collaborations, and small client projects where I can build real systems and keep improving.",
 };
 
-function getLocalAnswer(question) {
+const INTENTS = [
+  {
+    id: "automation",
+    keywords: ["automation", "ai agent", "workflow", "summarizer", "support bot", "chatbot"],
+    answer: () =>
+      `${PORTFOLIO_FACTS.aiAutomation} A good first project is one repetitive workflow with clear inputs, outputs, and a human approval step before anything important is changed.`,
+    more:
+      "For example, I could build a small assistant that reads form submissions, summarizes the request, stores it in Firebase Firestore, and helps prepare a reply. For businesses, I would start with one task that repeats every week and automate that first.",
+  },
+  {
+    id: "ml",
+    keywords: ["machine learning", "ml", "model", "data science", "ai experience"],
+    answer: () => PORTFOLIO_FACTS.ml,
+    more:
+      "The strongest direction for me right now is applied ML: cleaning data, understanding patterns, training basic models, and connecting results to real apps. I want the ML work to produce something useful, such as predictions, recommendations, classification, or better reporting.",
+  },
+  {
+    id: "databases",
+    keywords: ["database", "firestore", "firebase", "mongodb", "mongo", "sql"],
+    answer: () => PORTFOLIO_FACTS.databases,
+    more:
+      "In this portfolio, Firebase Firestore is useful for dynamic content like projects and blog posts. MongoDB is a good fit when I build Node.js APIs with flexible document data. I prefer naming the database instead of saying only 'database' because it tells visitors what I can actually work with.",
+  },
+  {
+    id: "services",
+    keywords: ["service", "offer", "client", "business", "build for me", "help me"],
+    answer: () =>
+      `${PORTFOLIO_FACTS.services} If you already have an idea, the best next step is to describe the problem, the users, and what data needs to move through the system.`,
+    more:
+      "A good client project for me would be a small web app, admin dashboard, API, portfolio, contact workflow, Firebase-backed content system, or automation that saves time. I care about building something clean, understandable, and easy to maintain.",
+  },
+  {
+    id: "skills",
+    keywords: ["skill", "stack", "technology", "tech", "strongest", "tools"],
+    answer: () => PORTFOLIO_FACTS.skills,
+    more:
+      "My strongest practical combination is React, Tailwind CSS, Firebase Firestore, JavaScript/TypeScript, and API thinking. I also use Python for data science and machine learning practice, and I keep Java, C#, Dart, and Flutter in my broader programming toolkit.",
+  },
+  {
+    id: "projects",
+    keywords: ["project", "portfolio", "built", "work", "github"],
+    answer: () => PORTFOLIO_FACTS.projects,
+    more:
+      "The portfolio shows my ability to ship a real React app: routing, SEO metadata, social preview image, Firebase content, EmailJS contact flow, admin panel, and Vercel deployment. I can keep adding stronger project case studies as I publish them.",
+  },
+  {
+    id: "education",
+    keywords: ["education", "study", "school", "university", "course", "ccna"],
+    answer: () => PORTFOLIO_FACTS.education,
+    more:
+      "My education combines software development, web applications, databases, AI, data science, and networking. That mix is useful because I understand both application code and the systems/data behind it.",
+  },
+  {
+    id: "contact",
+    keywords: ["contact", "hire", "reach", "email", "linkedin", "whatsapp"],
+    answer: () => PORTFOLIO_FACTS.contact,
+    more:
+      "The fastest ways are the contact form or WhatsApp link on the homepage. LinkedIn is best for professional messages, and GitHub is best if someone wants to review my code.",
+  },
+  {
+    id: "availability",
+    keywords: ["available", "internship", "job", "junior", "opportunity", "freelance"],
+    answer: () => PORTFOLIO_FACTS.availability,
+    more:
+      "The best fit would be a role or project where I can work on backend APIs, React interfaces, Firebase/MongoDB data, or AI automation while learning from real production feedback.",
+  },
+  {
+    id: "intro",
+    keywords: ["who", "about", "background", "introduce", "tell me about you"],
+    answer: () => PORTFOLIO_FACTS.intro,
+    more:
+      "I am currently building my skills through university studies, portfolio projects, and practical improvements like this site. My direction is backend plus AI, with enough frontend skill to build complete, usable products.",
+  },
+];
+
+const FOLLOW_UP_PATTERNS = [
+  "tell me more",
+  "more",
+  "explain",
+  "details",
+  "go on",
+  "continue",
+  "what else",
+];
+
+const SOURCE_PATTERNS = ["from where", "where", "source", "based on what", "how do you know"];
+
+function findLastIntent(messages) {
+  const previousUserMessages = messages
+    .filter((message) => message.sender === "user")
+    .map((message) => message.text.toLowerCase())
+    .reverse();
+
+  return previousUserMessages
+    .map((text) =>
+      INTENTS.find(({ keywords }) => keywords.some((keyword) => text.includes(keyword)))
+    )
+    .find(Boolean);
+}
+
+function getLocalAnswer(question, conversation = []) {
   const normalized = question.toLowerCase();
+  const matchedIntent = INTENTS.find(({ keywords }) =>
+    keywords.some((keyword) => normalized.includes(keyword))
+  );
 
-  if (normalized.includes("automation") || normalized.includes("ai agent") || normalized.includes("workflow")) {
-    return `${PORTFOLIO_FACTS.aiAutomation} A strong first step is to pick one repetitive process, define the inputs and outputs, then connect the right model, API, and approval checks around it.`;
+  if (matchedIntent) return matchedIntent.answer();
+
+  const previousIntent = findLastIntent(conversation);
+
+  if (previousIntent && FOLLOW_UP_PATTERNS.some((pattern) => normalized.includes(pattern))) {
+    return previousIntent.more;
   }
 
-  if (normalized.includes("service") || normalized.includes("offer") || normalized.includes("help")) {
-    return PORTFOLIO_FACTS.services;
+  if (previousIntent && SOURCE_PATTERNS.some((pattern) => normalized.includes(pattern))) {
+    if (previousIntent.id === "education") {
+      return "That comes from my education section: Information Systems Programme - Data Science at Hogskolan Dalarna, plus CCNA: Introduction to Networks from Cisco Networking Academy.";
+    }
+
+    if (previousIntent.id === "skills") {
+      return "Those skills come from this portfolio and my current work: the site uses React, Tailwind CSS, Firebase, EmailJS, and React Router, while my broader studies and projects cover Python, Java, C#, Dart, Flutter, MongoDB, APIs, and machine learning.";
+    }
+
+    if (previousIntent.id === "projects") {
+      return "That is based on this live portfolio project and the code behind it: React 18, Vite, Tailwind CSS, Firebase, EmailJS, React Router, an admin panel, blog content, SEO metadata, and Vercel deployment.";
+    }
+
+    return "That answer is based on the portfolio content: my About, Skills, Services, Projects, Education, and Contact sections.";
   }
 
-  if (normalized.includes("skill") || normalized.includes("stack") || normalized.includes("technology") || normalized.includes("tech")) {
-    return PORTFOLIO_FACTS.skills;
+  if (normalized.length < 8) {
+    return "I did not fully understand that. Do you want to know about my skills, education, projects, AI automation, databases, or contact details?";
   }
 
-  if (normalized.includes("contact") || normalized.includes("hire") || normalized.includes("reach")) {
-    return PORTFOLIO_FACTS.contact;
-  }
-
-  if (normalized.includes("who") || normalized.includes("about") || normalized.includes("background")) {
-    return PORTFOLIO_FACTS.background;
-  }
-
-  return "I can help with questions about Abdiaziz's services, AI automation, backend development, APIs, databases, skills, projects, and contact details. Try asking what kind of automation would fit your workflow.";
+  return "I can answer that better if you choose a topic: skills, projects, education, Firebase/MongoDB, React/Tailwind, AI automation, machine learning, services, or contact details.";
 }
 
 export default function Chatbot() {
@@ -87,12 +210,12 @@ export default function Chatbot() {
         throw new Error(data.error || "Chat request failed.");
       }
 
-      setMessages((prev) => [...prev, { text: data.text || getLocalAnswer(trimmedInput), sender: "bot" }]);
+      setMessages((prev) => [...prev, { text: data.text || getLocalAnswer(trimmedInput, nextMessages), sender: "bot" }]);
     } catch (error) {
       setMessages((prev) => [
         ...prev,
         {
-          text: getLocalAnswer(trimmedInput),
+          text: getLocalAnswer(trimmedInput, nextMessages),
           sender: "bot",
         },
       ]);

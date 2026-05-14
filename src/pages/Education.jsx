@@ -46,7 +46,7 @@ export default function Education() {
           <div>
             <p className="education-label">University Studies</p>
             <h2>Högskolan Dalarna, Sweden</h2>
-            <p className="education-muted">Data Science</p>
+            <p className="education-muted">Information Systems Programme - Data Science</p>
           </div>
           <p className="education-year">2024 - Present</p>
         </div>

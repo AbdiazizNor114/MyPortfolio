@@ -88,7 +88,7 @@ export default function Navbar({ menuOpen, setMenuOpen, setView }) {
           </li>
           <li>
             <a href="#blog" onClick={(event) => handleNavClick(event, () => navigate("blog", "#blog", true))}>
-              Blog
+              Journal
             </a>
           </li>
           <li>
