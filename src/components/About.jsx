@@ -8,10 +8,9 @@ export default function About() {
     <div className="grid-about">
       <div className="intro-text">
         <p>
-          I am a System Developer student with a strong interest in backend
-          development, APIs, databases, and AI-powered solutions. I enjoy
-          learning how reliable systems are built, solving practical problems,
-          and turning ideas into working applications.
+           I'm Abdiaziz — a System Developer specializing in backend systems, APIs, and AI-powered applications.
+          I build things that work: clean architecture, reliable logic, and solutions that solve real problems. 
+          Currently studying Systems Science in Sweden while shipping projects that go beyond the classroom.
         </p>
       </div>
 
@@ -19,8 +18,8 @@ export default function About() {
         <div className="grid-item">
           <h6>BACKEND DEVELOPMENT</h6>
           <p>
-            Building my skills in API development, business logic, and system
-            structure while focusing on clean, maintainable code.
+            Designing and building APIs, 
+            business logic, and system architecture with a focus on clean, maintainable code that scales.
           </p>
         </div>
 
