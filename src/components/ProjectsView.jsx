@@ -100,9 +100,7 @@ const getProjectFeatures = (project) => {
   }
 
   return [
-    "Built as a practical portfolio project",
-    "Designed with clean data flow and maintainable structure",
-    "Created to solve a real user or developer workflow problem",
+    "A portfolio project by Abdiaziz Nor.",
   ];
 };
 
