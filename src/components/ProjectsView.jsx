@@ -3,23 +3,41 @@ import { renderMarkdown } from "../services/markdownService";
 
 const PROJECTS = [
   {
-    title: "Self-Hosted Project",
-    sub: "Supabase - Self-hosted browser app",
-    tag: "fullstack",
-    badge: "Self hosted",
-    icon: "fa-server",
-    image: "/images/machine-learning.svg",
-    desc: "A self-hosted browser project published directly from my portfolio and added through the Supabase project flow. It keeps deployment lightweight, uses a simple static front end, and can be opened directly from the project gallery.",
+    title: "Somali Bank",
+    sub: "Python - CLI & GUI banking system",
+    tag: "python",
+    badge: "Python",
+    icon: "fa-building-columns",
+    image: "/images/Python-logo-notext.svg.png",
+    desc: "A full banking application built in Python with both a CLI and a Tkinter GUI. Users can create accounts, transfer money, and view transaction history, all persisted in SQLite.",
     features: [
-      "Self-hosted static project served from the portfolio",
-      "Added as a portfolio project through the Supabase content flow",
-      "Plain HTML, CSS, and JavaScript structure that is easy to deploy",
-      "Direct live demo route with no separate backend required",
-      "Designed so the project can keep growing without vendor lock-in",
+      "Account creation with auto-generated IBAN, BIC & clearing number",
+      "Deposit, withdrawal & peer-to-peer transfers with balance validation",
+      "Full transaction history ordered by timestamp",
+      "SQLite backend with a clean dedicated data access layer",
+      "Dual interface: terminal CLI and desktop Tkinter GUI",
     ],
-    tech: ["Supabase", "Self-hosted", "JavaScript", "HTML", "CSS"],
+    tech: ["Python", "SQLite", "Tkinter", "OOP"],
     github: "https://github.com/AbdiazizNor114",
-    demo: "/projects/local-ai/index.html",
+    demo: null,
+  },
+  {
+    title: "Portfolio Site",
+    sub: "React - Full stack personal site",
+    tag: "react",
+    badge: "React",
+    icon: "fa-layer-group",
+    image: "/images/portfolio-preview.png",
+    desc: "Personal portfolio built with React and Vite, featuring a Firebase-powered blog, contact form via EmailJS, and an admin panel for managing content.",
+    features: [
+      "Firebase Firestore blog with admin panel for publishing",
+      "EmailJS contact form with no backend required",
+      "Custom domain deployment on Vercel",
+      "Responsive design with Tailwind CSS",
+    ],
+    tech: ["React", "Firebase", "Tailwind", "Vite", "EmailJS"],
+    github: "https://github.com/AbdiazizNor114/MyPortfolio",
+    demo: "https://aziz.smidify.se",
   },
 ];
 
@@ -45,19 +63,8 @@ const getProjectTag = (project) => {
   if (text.includes("python")) return "python";
   if (text.includes("react")) return "react";
   if (
-    text.includes("ai") ||
-    text.includes("ollama") ||
-    text.includes("minicpm") ||
-    text.includes("llm")
-  ) {
-    return "ai";
-  }
-  if (
     text.includes("full stack") ||
     text.includes("fullstack") ||
-    text.includes("self-hosted") ||
-    text.includes("self hosted") ||
-    text.includes("supabase") ||
     text.includes("firebase") ||
     text.includes("node")
   ) {
@@ -137,12 +144,7 @@ const normalizeProject = (project) => {
 export default function ProjectsView({ projects = [] }) {
   const [active, setActive] = useState("All");
   const [selected, setSelected] = useState(null);
-  const projectItems = [...PROJECTS, ...projects]
-    .map(normalizeProject)
-    .filter(
-      (project, index, items) =>
-        items.findIndex((item) => item.title.toLowerCase() === project.title.toLowerCase()) === index
-    );
+  const projectItems = (projects.length > 0 ? projects : PROJECTS).map(normalizeProject);
   const activeKey = active.toLowerCase().replace(/\s+/g, "");
 
   const filtered =
