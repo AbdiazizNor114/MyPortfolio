@@ -143,6 +143,12 @@
   border: 1px solid rgba(97, 218, 251, 0.25);
 }
 
+.project-badge--ai {
+  background: rgba(29, 158, 117, 0.14);
+  color: #35d39f;
+  border: 1px solid rgba(29, 158, 117, 0.32);
+}
+
 .project-badge--fullstack {
   background: rgba(0, 118, 255, 0.1);
   color: var(--glow);

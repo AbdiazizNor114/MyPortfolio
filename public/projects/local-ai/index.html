@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Self-Hosted Project · Browser App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(','\\)'],['$','$']], displayMath: [['\\[','\\]'],['$$','$$']] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" id="hljs-light">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" id="hljs-dark" disabled>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+<div id="app">
+  <div id="header">
+    <div class="status-dot" id="dot"></div>
+    <span id="header-title">Self-hosted project</span>
+    <div id="header-right">
+      <span class="local-badge">self hosted</span>
+      <span class="model-badge">MiniCPM5-1B</span>
+    </div>
+  </div>
+
+  <div id="messages">
+    <div class="msg ai">
+      <div class="avatar ai">AI</div>
+      <div class="bubble">Hi, I can give you a little help using MiniCPM5-1B through Ollama on your own machine. Ask a question, paste code, or try a small idea.</div>
+    </div>
+  </div>
+
+  <div id="footer">
+    <div id="input-row">
+      <textarea id="input" placeholder="Ask for a little help..." rows="1"></textarea>
+      <button id="send" aria-label="Send message">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
+        </svg>
+      </button>
+    </div>
+    <p id="hint">Enter to send · Shift+Enter for new line · uses your local Ollama model</p>
+  </div>
+</div>
+</body>
+</html>
