@@ -1,4 +1,5 @@
 import React from "react";
+import { CV_URL } from "../constants";
 
 export default function Hero() {
   return (
@@ -8,7 +9,7 @@ export default function Hero() {
           <div className="info">
             <h1>Hi, I am</h1>
             <h2>ABDIAZIZ<br />NOR</h2>
-            <h6 className="glow-text">System Developer · Backend & AI Systems</h6>
+            <h6 className="glow-text">Full-stack developer building backend systems, AI tools, and practical web apps</h6>
           </div>
 
           <div className="contact-me">
@@ -20,6 +21,16 @@ export default function Hero() {
             </a>
             <a href="https://github.com/AbdiazizNor114" target="_blank" rel="noopener noreferrer">
               <i className="fa-brands fa-github"></i>
+            </a>
+          </div>
+
+          <div className="hero-actions">
+            <a className="btn hero-cv-btn" href={CV_URL} target="_blank" rel="noopener noreferrer">
+              <i className="fa-solid fa-file-arrow-down" aria-hidden="true"></i>
+              Download CV
+            </a>
+            <a className="hero-text-link" href="#contact">
+              Contact me
             </a>
           </div>
         </div>

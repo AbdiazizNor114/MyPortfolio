@@ -8,6 +8,7 @@ import Analytics from "./components/Analytics";
 import BlogView from "./components/BlogView";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
+import FeaturedProjects from "./components/FeaturedProjects";
 import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
 import ProjectsView from "./components/ProjectsView";
@@ -118,6 +119,7 @@ export default function App() {
         <main>
           <Hero />
           <About />
+          <FeaturedProjects projects={projects} setView={setView} />
           <Services />
           <Skills />
           <Contact />

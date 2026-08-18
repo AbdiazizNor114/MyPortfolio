@@ -1,5 +1,6 @@
 import React from "react";
 
+import { CV_URL } from "../constants";
 import ThemeToggle from "./ThemeToggle";
 
 export default function Navbar({ menuOpen, setMenuOpen, setView }) {
@@ -89,6 +90,11 @@ export default function Navbar({ menuOpen, setMenuOpen, setView }) {
           <li>
             <a href="#blog" onClick={(event) => handleNavClick(event, () => navigate("blog", "#blog", true))}>
               Journal
+            </a>
+          </li>
+          <li>
+            <a href={CV_URL} target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)}>
+              CV
             </a>
           </li>
           <li>

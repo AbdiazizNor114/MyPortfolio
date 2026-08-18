@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { renderMarkdown } from "../services/markdownService";
 
-const PROJECTS = [
+export const PROJECTS = [
   {
     title: "Somali Bank",
     sub: "Python - CLI & GUI banking system",
@@ -153,7 +153,7 @@ function ProjectMedia({ project, className }) {
   );
 }
 
-const normalizeProject = (project) => {
+export const normalizeProject = (project) => {
   const tech = toTechArray(project.tech);
   const tag = getProjectTag(project);
   const desc = project.desc || project.content || "A portfolio project by Abdiaziz Nor.";

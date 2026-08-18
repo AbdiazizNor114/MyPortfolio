@@ -87,6 +87,10 @@
     gap: 25px;
   }
 
+  .featured-projects__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .blog-list {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 25px;
@@ -133,6 +137,10 @@
   .projects-grid {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
+  }
+
+  .featured-projects__grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }
 
   .blog-list {
@@ -250,6 +258,15 @@
     font-size: 1rem;
   }
 
+  .hero-actions {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .hero-cv-btn {
+    width: auto;
+  }
+
   .grid-about {
     grid-template-columns: 1fr;
     gap: 30px;
@@ -273,6 +290,20 @@
   .projects-grid {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
+  }
+
+  .featured-projects {
+    padding-top: 28px;
+    padding-bottom: 60px;
+  }
+
+  .featured-projects__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .featured-projects__link {
+    width: 100%;
   }
 
   .blog-list {
@@ -370,6 +401,15 @@
   .nav-links a {
     font-size: 13px;
     padding: 8px 0;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .hero-cv-btn {
+    width: 100%;
   }
 
   h4 {
