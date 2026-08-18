@@ -1,5 +1,5 @@
 import React from "react";
-import { CV_URL } from "../constants";
+import { CV_ICON_URL, CV_URL } from "../constants";
 
 export default function Hero() {
   return (
@@ -23,7 +23,7 @@ export default function Hero() {
               <i className="fa-brands fa-github"></i>
             </a>
             <a href={CV_URL} target="_blank" rel="noopener noreferrer" aria-label="Download CV">
-              <i className="fa-solid fa-file-arrow-down"></i>
+              <img className="cv-icon" src={CV_ICON_URL} alt="" />
             </a>
           </div>
         </div>

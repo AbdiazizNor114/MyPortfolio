@@ -258,6 +258,12 @@
     font-size: 1rem;
   }
 
+  .contact-me .cv-icon {
+    width: 35px;
+    height: 35px;
+    padding: 0.42rem;
+  }
+
   .grid-about {
     grid-template-columns: 1fr;
     gap: 30px;
