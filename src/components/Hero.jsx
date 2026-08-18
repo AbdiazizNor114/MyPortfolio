@@ -22,15 +22,8 @@ export default function Hero() {
             <a href="https://github.com/AbdiazizNor114" target="_blank" rel="noopener noreferrer">
               <i className="fa-brands fa-github"></i>
             </a>
-          </div>
-
-          <div className="hero-actions">
-            <a className="btn hero-cv-btn" href={CV_URL} target="_blank" rel="noopener noreferrer">
-              <i className="fa-solid fa-file-arrow-down" aria-hidden="true"></i>
-              Download CV
-            </a>
-            <a className="hero-text-link" href="#contact">
-              Contact me
+            <a href={CV_URL} target="_blank" rel="noopener noreferrer" aria-label="Download CV">
+              <i className="fa-solid fa-file-arrow-down"></i>
             </a>
           </div>
         </div>

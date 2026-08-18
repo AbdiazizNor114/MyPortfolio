@@ -87,34 +87,6 @@
   transform: scale(1.1);
 }
 
-.hero-actions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  opacity: 0;
-  animation: fadeInUp 1s ease-out 1.05s forwards;
-}
-
-.hero-cv-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.55rem;
-  width: fit-content;
-}
-
-.hero-text-link {
-  color: var(--text-beige);
-  font-weight: 700;
-  opacity: 0.78;
-}
-
-.hero-text-link:hover {
-  color: var(--glow);
-  opacity: 1;
-}
-
-
 .person-img {
   display: flex;
   justify-content: center;

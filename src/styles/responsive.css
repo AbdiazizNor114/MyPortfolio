@@ -258,15 +258,6 @@
     font-size: 1rem;
   }
 
-  .hero-actions {
-    justify-content: center;
-    width: 100%;
-  }
-
-  .hero-cv-btn {
-    width: auto;
-  }
-
   .grid-about {
     grid-template-columns: 1fr;
     gap: 30px;
@@ -293,8 +284,8 @@
   }
 
   .featured-projects {
-    padding-top: 28px;
-    padding-bottom: 60px;
+    padding-top: 12px;
+    padding-bottom: 52px;
   }
 
   .featured-projects__header {
@@ -401,15 +392,6 @@
   .nav-links a {
     font-size: 13px;
     padding: 8px 0;
-  }
-
-  .hero-actions {
-    flex-direction: column;
-    gap: 0.7rem;
-  }
-
-  .hero-cv-btn {
-    width: 100%;
   }
 
   h4 {
