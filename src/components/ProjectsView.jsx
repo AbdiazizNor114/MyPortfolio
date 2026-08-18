@@ -119,6 +119,40 @@ const getPlainText = (value) =>
     .replace(/\s+/g, " ")
     .trim();
 
+const isVideoMedia = (url) => /\.(mp4|webm|ogg)(\?|#|$)/i.test(url);
+
+function ProjectMedia({ project, className }) {
+  const [hasError, setHasError] = useState(false);
+
+  if (!project.image || hasError) {
+    return <span className="project-card__placeholder">{project.badge}</span>;
+  }
+
+  if (isVideoMedia(project.image)) {
+    return (
+      <video
+        src={project.image}
+        className={className}
+        muted
+        playsInline
+        preload="metadata"
+        controls
+        onError={() => setHasError(true)}
+      />
+    );
+  }
+
+  return (
+    <img
+      src={project.image}
+      alt={`${project.title} preview`}
+      className={className}
+      loading="lazy"
+      onError={() => setHasError(true)}
+    />
+  );
+}
+
 const normalizeProject = (project) => {
   const tech = toTechArray(project.tech);
   const tag = getProjectTag(project);
@@ -131,7 +165,7 @@ const normalizeProject = (project) => {
     sub: project.sub || `${project.language || badge} - Portfolio project`,
     tag,
     badge,
-    image: project.media || project.image || "",
+    image: project.media || project.image || project.thumbnail || project.cover || "",
     desc,
     excerpt: getPlainText(desc),
     features: getProjectFeatures(project),
@@ -186,11 +220,7 @@ export default function ProjectsView({ projects = [] }) {
             onClick={() => setSelected(project)}
           >
             <div className="project-card__img">
-              {project.image ? (
-                <img src={project.image} alt={`${project.title} preview`} className="project-card__image" loading="lazy" />
-              ) : (
-                <span className="project-card__placeholder">{project.badge}</span>
-              )}
+              <ProjectMedia project={project} className="project-card__image" />
               <span className={`project-badge project-badge--${project.tag}`}>
                 {project.badge}
               </span>
@@ -244,11 +274,7 @@ export default function ProjectsView({ projects = [] }) {
 
             <div className="project-modal-body">
               <div className="project-modal-preview">
-                {selected.image ? (
-                  <img src={selected.image} alt={`${selected.title} preview`} className="project-modal-preview-img" />
-                ) : (
-                  <span className="project-card__placeholder">{selected.badge}</span>
-                )}
+                <ProjectMedia project={selected} className="project-modal-preview-img" />
               </div>
 
               <div

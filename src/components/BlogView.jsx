@@ -40,6 +40,40 @@ const getPostHighlights = (post) => {
   ];
 };
 
+const isVideoMedia = (url) => /\.(mp4|webm|ogg)(\?|#|$)/i.test(url);
+
+function BlogMedia({ post, className, iconClassName }) {
+  const [hasError, setHasError] = useState(false);
+
+  if (!post.media || hasError) {
+    return <i className={`fa-solid ${post.icon} ${iconClassName || ""}`} aria-hidden="true" />;
+  }
+
+  if (isVideoMedia(post.media)) {
+    return (
+      <video
+        src={post.media}
+        className={className}
+        muted
+        playsInline
+        preload="metadata"
+        controls
+        onError={() => setHasError(true)}
+      />
+    );
+  }
+
+  return (
+    <img
+      src={post.media}
+      alt={`${post.title} preview`}
+      className={className}
+      loading="lazy"
+      onError={() => setHasError(true)}
+    />
+  );
+}
+
 const normalizePost = (post) => {
   const content = post.content || post.desc || "";
 
@@ -50,6 +84,7 @@ const normalizePost = (post) => {
     icon: "fa-newspaper",
     date: post.date || "No date",
     desc: content,
+    media: post.media || post.image || post.thumbnail || post.cover || "",
     features: getPostHighlights(post),
     tech: post.tech
       ? post.tech.split(",").map((item) => item.trim()).filter(Boolean)
@@ -83,7 +118,7 @@ export default function BlogView({ blogs, hasError = false }) {
             onClick={() => setSelected(post)}
           >
             <div className="blog-card__img">
-              <i className={`fa-solid ${post.icon}`} aria-hidden="true" />
+              <BlogMedia post={post} className="blog-card__image" />
               <span className="blog-badge">{post.date}</span>
             </div>
 
@@ -133,7 +168,11 @@ export default function BlogView({ blogs, hasError = false }) {
 
             <div className="blog-modal-body">
               <div className="blog-modal-preview">
-                <i className={`fa-solid ${selected.icon}`} aria-hidden="true" />
+                <BlogMedia
+                  post={selected}
+                  className="blog-modal-preview-img"
+                  iconClassName="blog-modal-preview-icon"
+                />
               </div>
 
               <div
