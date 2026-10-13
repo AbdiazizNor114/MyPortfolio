@@ -119,6 +119,7 @@ export default function Education() {
             ))}
           </ul>
         </div>
+        <a className="education-verify" href="https://www.credly.com/badges/20b57744-2fee-45a7-a38f-380a4d878228" target="_blank" rel="noopener noreferrer">Verify CCNA badge on Credly ↗</a>
       </section>
       <section className="education-card">
         <div className="education-card-header">
