@@ -65,3 +65,14 @@ test('answers school, qualifications, CV and experience from verified records', 
   assert.match(FACTS.diplomas, /ongoing/);
   assert.match(FACTS.cv, /https:\/\/aziz.smartdo.app\/cv\/abdiaziz-nor-cv.pdf/);
 });
+
+test('accepts casual introductions without requiring suggested questions', async () => {
+  for (const text of ['who is this guy', "who's this?", 'Who is he?', 'tell me about him', 'what does this guy do?']) {
+    assert.equal(getPortfolioAnswer(text), FACTS.intro);
+    const reply = await createChatReply({messages:[{sender:'user',text}]}, {
+      env:{GROQ_API_KEY:'test'},fetchImpl:async()=>({ok:true,json:async()=>({choices:[{message:{content:'{"topic":"unknown"}'}}]})}),
+    });
+    assert.equal(reply.text, FACTS.intro);
+  }
+  assert.equal(getPortfolioAnswer('Who is this guy, Elon Musk?'), SCOPE_MESSAGE);
+});

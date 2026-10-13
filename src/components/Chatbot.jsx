@@ -2,7 +2,7 @@ import { MessageCircle, Send, X, RotateCcw } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { getPortfolioAnswer, MAX_HISTORY, MAX_MESSAGE_LENGTH } from '../../shared/portfolioChat.js';
 
-const WELCOME = { sender: 'bot', text: 'Hi! I’m Abdiaziz’s portfolio assistant. Ask me about his projects, skills, education, diplomas, CV, services, or how to contact him.' };
+const WELCOME = { sender: 'bot', text: 'Hi! I’m Abdiaziz’s portfolio assistant. Type any question about him, or try a suggestion below. Ask me about his projects, skills, education, diplomas, CV, services, or how to contact him.' };
 const SUGGESTIONS = ['What has Abdiaziz built?', 'Where did he go to high school?', 'What diplomas does he have?', 'Can I download his CV?'];
 
 export default function Chatbot({ projects = [] }) {

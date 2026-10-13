@@ -38,10 +38,12 @@ const patterns = [
   ['services', /\b(services?|offers?|client|business|build for|help with)\b/i],
   ['intro', /\b(background|introduce|abdiaziz|aziz|about (?:you|him)|who (?:is|are) (?:he|you|abdiaziz|aziz))\b/i],
 ];
+export const INTRO_QUESTION = /^(?:who(?:'s| is| are) (?:this|that)(?: guy| man| person| developer)?|who(?:'s| is| are) (?:he|you)|(?:tell me|what can you tell me|can you tell me)(?: more)? about (?:him|yourself|this guy|this person)|what does (?:he|this guy) do)[?.!\s]*$/i;
 const followUp = /^(?:tell me more|more|explain|details|go on|continue|what else|why|from where|where|source|how do you know)[?.!\s]*$/i;
 export function routeLocally(question, conversation = [], projects = []) {
   if (/^(hi|hello|hey|good (morning|afternoon|evening))[!.\s]*$/i.test(question)) return { topic: 'intro' };
   if (/\b(wife|husband|girlfriend|boyfriend|children|birthday|salary|home address)\b|ignore.*instructions|system prompt|write (?:me )?(?:code|an essay)|solve|weather|recipe|capital of/i.test(question)) return { topic: 'unknown' };
+  if (INTRO_QUESTION.test(question.trim())) return { topic: 'intro' };
   const project = projects.find(p => p.title && question.toLowerCase().includes(p.title.toLowerCase()));
   if (project) return { topic: 'projects', projectId: String(project.id) };
   if (followUp.test(question)) {
