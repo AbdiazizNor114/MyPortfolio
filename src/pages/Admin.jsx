@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
-import { app } from "../firebase";
+import { supabase, getSupabase } from "../supabase";
 import { dataService } from "../services/dataService";
 import { renderMarkdown } from "../services/markdownService";
 import "../styles/pages/admin.css";
@@ -56,7 +55,60 @@ const formatHighlightsForEdit = (item) => {
 
 export default function Admin() {
   const navigate = useNavigate();
-  const storage = getStorage(app);
+  const [session, setSession] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    if (!supabase) { setAuthLoading(false); return; }
+    let active = true;
+    let version = 0;
+    async function syncSession(nextSession) {
+      const requestVersion = ++version;
+      setSession(nextSession);
+      setIsAdmin(false);
+      setAuthLoading(true);
+      try {
+        if (nextSession) {
+          const { data, error: membershipError } = await supabase.from('portfolio_admins')
+            .select('user_id').eq('user_id', nextSession.user.id).maybeSingle();
+          if (membershipError) throw membershipError;
+          if (active && version === requestVersion) setIsAdmin(Boolean(data));
+        }
+      } catch (err) {
+        if (active && version === requestVersion) setError(err.message);
+      } finally {
+        if (active && version === requestVersion) setAuthLoading(false);
+      }
+    }
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      // Run queries outside the auth callback to avoid blocking token refresh.
+      window.setTimeout(() => { if (active) syncSession(nextSession); }, 0);
+    });
+    return () => { active = false; subscription.unsubscribe(); };
+  }, []);
+
+  async function signIn(event) {
+    event.preventDefault();
+    setError("");
+    setIsSaving(true);
+    try {
+      const { error: authError } = await getSupabase().auth.signInWithPassword({ email, password });
+      if (authError) throw authError;
+      setPassword("");
+    } catch (err) { setError(err.message); }
+    finally { setIsSaving(false); }
+  }
+
+  async function signOut() {
+    setError("");
+    const { error: authError } = await getSupabase().auth.signOut();
+    if (authError) setError(authError.message);
+  }
 
   const [tab, setTab] = useState("projects");
   const [items, setItems] = useState([]);
@@ -65,7 +117,6 @@ export default function Admin() {
   const [editing, setEditing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
-  const [uploadProgress, setUploadProgress] = useState(0);
   const descRef = useRef(null);
 
   const isProject = tab === "projects";
@@ -82,8 +133,8 @@ export default function Admin() {
     .filter(Boolean);
 
   useEffect(() => {
-    loadData();
-  }, [tab]);
+    if (isAdmin) loadData().catch((err) => setError(err.message));
+  }, [tab, isAdmin]);
 
   const loadData = async () => {
     const [projects, blogs] = await Promise.all([
@@ -167,7 +218,7 @@ export default function Admin() {
 
   const insertStarter = () => {
     const starter = isProject
-      ? `## Problem\nWhat problem does this project solve?\n\n## What I Built\n- Main feature\n- Tech decision\n- User-facing result\n\n## Tech Stack\nReact, Tailwind CSS, Firebase\n\n## Result\nWhat changed after building it?`
+      ? `## Problem\nWhat problem does this project solve?\n\n## What I Built\n- Main feature\n- Tech decision\n- User-facing result\n\n## Tech Stack\nReact, Tailwind CSS, Supabase\n\n## Result\nWhat changed after building it?`
       : `## Quick Summary\nWhat is this post about?\n\n## What I Learned\n- Key lesson one\n- Key lesson two\n- Key lesson three\n\n## Example\nAdd a practical example or code idea here.\n\n## Takeaway\nEnd with one clear lesson.`;
 
     setForm((prev) => ({
@@ -180,72 +231,69 @@ export default function Admin() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (isUploading) return;
+    if (isUploading || isSaving) return;
+    setError("");
+    setIsSaving(true);
+    try {
+      if (isProject) {
+        const project = {
+          ...form,
+          language: getFinalLanguage(),
+          media: form.media?.trim() || "",
+          highlights: form.highlights?.trim() || "",
+          github: form.github?.trim() || "",
+          demo: form.demo?.trim() || "",
+        };
 
-    if (isProject) {
-      const project = {
-        ...form,
-        language: getFinalLanguage(),
-        media: form.media?.trim() || "",
-        highlights: form.highlights?.trim() || "",
-        github: form.github?.trim() || "",
-        demo: form.demo?.trim() || "",
-      };
-
-      if (editing) {
-        await dataService.updateProject(project);
+        if (editing) {
+          await dataService.updateProject(project);
+        } else {
+          await dataService.saveProject(project);
+        }
       } else {
-        await dataService.saveProject(project);
-      }
-    } else {
-      const blog = {
-        ...form,
-        content: form.desc,
-        date: new Date().toLocaleDateString(),
-        media: form.media?.trim() || "",
-        highlights: form.highlights?.trim() || "",
-      };
+        const blog = {
+          ...form,
+          content: form.desc,
+          date: new Date().toLocaleDateString(),
+          media: form.media?.trim() || "",
+          highlights: form.highlights?.trim() || "",
+        };
 
-      if (editing) {
-        await dataService.updateBlog(blog);
-      } else {
-        await dataService.saveBlog(blog);
+        if (editing) {
+          await dataService.updateBlog(blog);
+        } else {
+          await dataService.saveBlog(blog);
+        }
       }
-    }
 
-    await loadData();
-    reset();
+      await loadData();
+      reset();
+    } catch (err) { setError(err.message); }
+    finally { setIsSaving(false); }
   };
 
-  const handleFileUpload = (event) => {
+  const handleFileUpload = async (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
     setUploadError("");
-    setUploadProgress(0);
+    if (file.size > 50 * 1024 * 1024) {
+      setUploadError("Choose a file smaller than 50 MB.");
+      return;
+    }
     setIsUploading(true);
-
-    const cleanName = file.name.replace(/\s+/g, "-").toLowerCase();
-    const storageRef = ref(storage, `media/${tab}/${Date.now()}-${cleanName}`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        setUploadProgress(Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100));
-      },
-      (error) => {
-        setUploadError(`Upload failed: ${error.message}`);
-        setIsUploading(false);
-        setUploadProgress(0);
-      },
-      async () => {
-        const url = await getDownloadURL(uploadTask.snapshot.ref);
-        setForm((prev) => ({ ...prev, media: url }));
-        setIsUploading(false);
-        setUploadProgress(0);
-      }
-    );
+    try {
+      const client = getSupabase();
+      const cleanName = file.name.replace(/[^a-zA-Z0-9._-]/g, '-').toLowerCase();
+      const path = `media/${tab}/${crypto.randomUUID()}-${cleanName}`;
+      const { error: storageError } = await client.storage.from('portfolio-media').upload(path, file);
+      if (storageError) throw storageError;
+      const { data } = client.storage.from('portfolio-media').getPublicUrl(path);
+      setForm((prev) => ({ ...prev, media: data.publicUrl }));
+    } catch (err) {
+      setUploadError(`Upload failed: ${err.message}`);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleEdit = (item) => {
@@ -265,14 +313,35 @@ export default function Admin() {
   };
 
   const handleDelete = async (id) => {
-    if (isProject) {
-      await dataService.deleteProject(id);
-    } else {
-      await dataService.deleteBlog(id);
-    }
+    if (isSaving) return;
+    setIsSaving(true);
+    setError("");
+    try {
+      if (isProject) {
+        await dataService.deleteProject(id);
+      } else {
+        await dataService.deleteBlog(id);
+      }
 
-    await loadData();
+      await loadData();
+    } catch (err) { setError(err.message); }
+    finally { setIsSaving(false); }
   };
+
+  if (authLoading) return <main className="admin-login"><p>Checking your session…</p></main>;
+  if (!supabase || !session || !isAdmin) return (
+    <main className="admin-login">
+      <h1>Portfolio admin</h1>
+      {!supabase ? <p>Add your Supabase URL and publishable key to .env.local, then restart the app.</p>
+        : !session ? <form onSubmit={signIn} className="admin-form">
+          <label className="field-group"><span>Email</span><input type="email" autoComplete="username" required value={email} onChange={(e) => setEmail(e.target.value)} /></label>
+          <label className="field-group"><span>Password</span><input type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} /></label>
+          <button className="admin-btn" disabled={isSaving}>{isSaving ? 'Signing in…' : 'Sign in'}</button>
+        </form> : <><p>This account does not have admin access. Add it to the admin allowlist in Supabase.</p><button onClick={signOut}>Sign out</button></>}
+      {error && <p role="alert" className="admin-upload-error">{error}</p>}
+      <button onClick={() => navigate('/')}>Back to portfolio</button>
+    </main>
+  );
 
   return (
     <div className="admin-layout">
@@ -283,12 +352,12 @@ export default function Admin() {
         </div>
 
         <div className="admin-tabs" aria-label="Content type">
-          <button className={isProject ? "active" : ""} onClick={() => setTab("projects")}>
+          <button className={isProject ? "active" : ""} disabled={isSaving || isUploading} onClick={() => { reset(); setTab("projects"); }}>
             <span>Projects</span>
             <strong>{counts.projects}</strong>
           </button>
 
-          <button className={!isProject ? "active" : ""} onClick={() => setTab("blogs")}>
+          <button className={!isProject ? "active" : ""} disabled={isSaving || isUploading} onClick={() => { reset(); setTab("blogs"); }}>
             <span>Blogs</span>
             <strong>{counts.blogs}</strong>
           </button>
@@ -326,10 +395,10 @@ export default function Admin() {
               </div>
 
               <div className="actions">
-                <button type="button" className="edit-action" onClick={() => handleEdit(item)}>
+                <button type="button" className="edit-action" disabled={isSaving || isUploading} onClick={() => handleEdit(item)}>
                   Edit
                 </button>
-                <button type="button" className="delete-action" onClick={() => handleDelete(item.id)}>
+                <button type="button" className="delete-action" disabled={isSaving || isUploading} onClick={() => handleDelete(item.id)}>
                   Delete
                 </button>
               </div>
@@ -337,6 +406,7 @@ export default function Admin() {
           ))}
         </div>
 
+        <button className="exit" onClick={signOut}>Sign out</button>
         <button className="exit" onClick={() => navigate("/")}>
           Exit portfolio
         </button>
@@ -354,6 +424,7 @@ export default function Admin() {
           </button>
         </div>
 
+        {error && <p role="alert" className="admin-upload-error">{error}</p>}
         <form onSubmit={handleSubmit} className="admin-form">
           <label className="field-group">
             <span>Title</span>
@@ -419,13 +490,13 @@ export default function Admin() {
                 type="file"
                 accept="image/*,video/*"
                 onChange={handleFileUpload}
-                disabled={isUploading}
+                disabled={isUploading || isSaving}
               />
             </label>
             {isUploading && (
               <div className="upload-progress">
-                <div className="progress-bar" style={{ width: `${uploadProgress}%` }} />
-                <small>{uploadProgress}%</small>
+
+                <small>Uploading…</small>
               </div>
             )}
             {uploadError && <small className="admin-upload-error">{uploadError}</small>}
@@ -450,7 +521,7 @@ export default function Admin() {
               <label className="field-group">
                 <span>Tech Stack</span>
                 <input
-                  placeholder="Type comma-separated tags, example: React, Tailwind CSS, Firebase"
+                  placeholder="Type comma-separated tags, example: React, Tailwind CSS, Supabase"
                   value={form.tech}
                   onChange={(event) => setForm({ ...form, tech: event.target.value })}
                 />
@@ -515,7 +586,7 @@ export default function Admin() {
           )}
 
           <div className="admin-actions-row">
-            <button className="admin-btn" disabled={isUploading}>
+            <button className="admin-btn" disabled={isUploading || isSaving}>
               {editing ? "Update content" : `Publish ${isProject ? "project" : "blog"}`}
             </button>
 

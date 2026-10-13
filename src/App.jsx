@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 
 import About from "./components/About";
 import Admin from "./pages/Admin";
-import Analytics from "./components/Analytics";
 import BlogView from "./components/BlogView";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
@@ -112,7 +111,6 @@ export default function App() {
         description="Professional portfolio showcasing web development projects, skills, and experience in React, JavaScript, and modern web technologies."
         keywords="web development, react, javascript, portfolio, full stack developer, frontend, backend"
       />
-      <Analytics pageName={view} />
       <Navbar menuOpen={menuOpen} setMenuOpen={setMenuOpen} setView={setView} />
 
       {view === "portfolio" && (

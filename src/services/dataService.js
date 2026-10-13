@@ -1,62 +1,36 @@
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  updateDoc,
-  query,
-  orderBy,
-} from "firebase/firestore";
-import { db } from "../firebase";
+import { getSupabase } from '../supabase';
 
-const PROJECT_COLLECTION = "projects";
-const BLOG_COLLECTION = "blogs";
-
-const readCollection = async (name) => {
-  const snap = await getDocs(collection(db, name));
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-};
-
+const fields = ['title', 'desc', 'content', 'date', 'tech', 'language', 'customLanguage', 'media', 'highlights', 'github', 'demo'];
+function payload(item, table) {
+  return Object.fromEntries(fields
+    .filter((field) => (table === 'blogs' || field !== 'date') && item[field] !== undefined)
+    .map((field) => [field, item[field] ?? '']));
+}
+async function read(table, column) {
+  const { data, error } = await getSupabase().from(table).select('*').order(column, { ascending: column === 'media' });
+  if (error) throw error;
+  return data;
+}
+async function save(table, item) {
+  const { data, error } = await getSupabase().from(table).insert(payload(item, table)).select('id').single();
+  if (error) throw error;
+  return data.id;
+}
+async function update(table, item) {
+  const { error } = await getSupabase().from(table).update(payload(item, table)).eq('id', String(item.id)).select('id').single();
+  if (error) throw error;
+}
+async function remove(table, id) {
+  const { error } = await getSupabase().from(table).delete().eq('id', String(id)).select('id').single();
+  if (error) throw error;
+}
 export const dataService = {
-  // ================= READ =================
-  getProjects: async () => {
-    const q = query(collection(db, PROJECT_COLLECTION), orderBy("media", "asc"));
-    const snap = await getDocs(q);
-    return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-  },
-  getBlogs: async () => readCollection(BLOG_COLLECTION),
-
-  // ================= CREATE =================
-  saveProject: async (project) => {
-    const { id, ...payload } = project;
-    const created = await addDoc(collection(db, PROJECT_COLLECTION), payload);
-    return created.id;
-  },
-
-  saveBlog: async (blog) => {
-    const { id, ...payload } = blog;
-    const created = await addDoc(collection(db, BLOG_COLLECTION), payload);
-    return created.id;
-  },
-
-  // ================= DELETE =================
-  deleteProject: async (id) => {
-    await deleteDoc(doc(db, PROJECT_COLLECTION, String(id)));
-  },
-
-  deleteBlog: async (id) => {
-    await deleteDoc(doc(db, BLOG_COLLECTION, String(id)));
-  },
-
-  // ================= UPDATE =================
-  updateProject: async (updated) => {
-    const { id, ...payload } = updated;
-    await updateDoc(doc(db, PROJECT_COLLECTION, String(id)), payload);
-  },
-
-  updateBlog: async (updated) => {
-    const { id, ...payload } = updated;
-    await updateDoc(doc(db, BLOG_COLLECTION, String(id)), payload);
-  },
+  getProjects: () => read('projects', 'media'),
+  getBlogs: () => read('blogs', 'created_at'),
+  saveProject: (item) => save('projects', item),
+  saveBlog: (item) => save('blogs', item),
+  updateProject: (item) => update('projects', item),
+  updateBlog: (item) => update('blogs', item),
+  deleteProject: (id) => remove('projects', id),
+  deleteBlog: (id) => remove('blogs', id),
 };

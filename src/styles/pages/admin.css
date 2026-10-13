@@ -680,3 +680,7 @@
     width: fit-content;
   }
 }
+
+.admin-login { max-width: 480px; margin: 10vh auto; padding: 28px; }
+.admin-login h1 { margin-bottom: 24px; }
+.admin-login > button { margin-top: 20px; }

@@ -11,7 +11,7 @@ const fallbackPosts = [
     desc: "A short note about building a modern developer portfolio with React, Firebase content, EmailJS contact handling, and an admin workflow.",
     features: [
       "React and Vite frontend structure",
-      "Firebase-powered dynamic content",
+      "Supabase-powered dynamic content",
       "EmailJS contact form integration",
       "Admin workflow for projects and blog updates",
     ],
