@@ -2,8 +2,8 @@ import { MessageCircle, Send, X, RotateCcw } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { getPortfolioAnswer, MAX_HISTORY, MAX_MESSAGE_LENGTH } from '../../shared/portfolioChat.js';
 
-const WELCOME = { sender: 'bot', text: 'Hi! I’m Abdiaziz’s portfolio assistant. Ask me about his projects, skills, education, services, or how to contact him.' };
-const SUGGESTIONS = ['What has Abdiaziz built?', 'What are his strongest skills?', 'How can I contact him?'];
+const WELCOME = { sender: 'bot', text: 'Hi! I’m Abdiaziz’s portfolio assistant. Ask me about his projects, skills, education, diplomas, CV, services, or how to contact him.' };
+const SUGGESTIONS = ['What has Abdiaziz built?', 'Where did he go to high school?', 'What diplomas does he have?', 'Can I download his CV?'];
 
 export default function Chatbot({ projects = [] }) {
   const [messages, setMessages] = useState([WELCOME]);
@@ -63,7 +63,7 @@ export default function Chatbot({ projects = [] }) {
         </div>
       </div>
       <div className="messages" ref={logRef} role="log" aria-label="Chat messages" aria-live="polite" aria-relevant="additions" aria-busy={isLoading}>
-        {messages.map((message, index) => <div key={index} className={`message ${message.sender}`}><span className="sr-only">{message.sender === 'bot' ? 'Portfolio assistant: ' : 'You: '}</span>{message.text}</div>)}
+        {messages.map((message, index) => <div key={index} className={`message ${message.sender}`}><span className="sr-only">{message.sender === 'bot' ? 'Portfolio assistant: ' : 'You: '}</span>{message.text.split(/(https:\/\/[^\s]+)/g).map((part, partIndex) => /^https:\/\//.test(part) ? <a key={partIndex} href={part} target="_blank" rel="noopener noreferrer">{part}</a> : part)}</div>)}
         {isLoading && <div className="message bot typing-indicator" role="status" aria-label="Finding portfolio information"><span aria-hidden="true" /><span aria-hidden="true" /><span aria-hidden="true" /></div>}
       </div>
       {messages.length === 1 && <div className="quick-questions" aria-label="Suggested questions">{SUGGESTIONS.map(question => <button key={question} type="button" disabled={isLoading} onClick={() => sendMessage(question)}>{question}</button>)}</div>}

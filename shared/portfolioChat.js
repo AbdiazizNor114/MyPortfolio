@@ -1,11 +1,17 @@
 export const MAX_MESSAGE_LENGTH = 1200;
 export const MAX_HISTORY = 10;
-export const TOPICS = ['intro', 'skills', 'education', 'projects', 'services', 'automation', 'ml', 'databases', 'contact', 'availability', 'unknown'];
-export const SCOPE_MESSAGE = "I can help with Abdiaziz’s background, skills, education, projects, services, and contact details. I only answer questions about his portfolio.";
+export const TOPICS = ['intro', 'skills', 'education', 'high_school', 'university', 'diplomas', 'courses', 'cv', 'experience', 'projects', 'services', 'automation', 'ml', 'databases', 'contact', 'availability', 'unknown'];
+export const SCOPE_MESSAGE = "I can help with Abdiaziz’s background, skills, education, high school, diplomas, CV, projects, services, and contact details. I only answer questions about his portfolio.";
 export const FACTS = {
   intro: 'Abdiaziz Nor is a System Developer and AI enthusiast based in Sweden, focused on backend systems, APIs, React applications, and practical AI automation.',
   skills: 'His portfolio lists React, Tailwind CSS, JavaScript, TypeScript, Node.js, Python, Java, C#, Dart, Flutter, Firebase, MongoDB, API development, Git, and machine learning with Python. This site also uses Supabase.',
   education: 'He studies Information Systems with a Data Science focus at Högskolan Dalarna. His listed coursework includes AI, Data Science & Machine Learning, Database Systems, web applications, responsive web design, and IT Project Management. He also completed CCNA: Introduction to Networks.',
+  high_school: 'Abdiaziz attended Lugnetgymnasiet (Lugnet High School) in Sweden from August 2019 to June 2022. He completed the Electrical and Energy Program, specializing in Computer & Communication Technology, with a vocational diploma in computer and network technology.',
+  university: 'Abdiaziz studies the Information Systems Programme at Dalarna University (Högskolan Dalarna), Sweden, with a Data Science focus. He started in August 2023 and is currently studying. His portfolio does not list a completed university degree.',
+  diplomas: 'His completed qualifications include a vocational high school diploma from Lugnetgymnasiet in 2022: Electrical and Energy Program, Computer & Communication Technology. He also completed CCNA: Introduction to Networks through Cisco Networking Academy in 2024. His Information Systems university studies are ongoing; a completed university degree is not listed.',
+  courses: 'At Dalarna University, his listed courses include Object-Oriented Programming, Data and Information Management, Database Systems, Dynamic Web Applications, Responsive Web Design, Artificial Intelligence, Data Science & Machine Learning, Statistical Analysis, Web-based GIS, and IT Project Management. At Lugnetgymnasiet, he studied Programming 1 & 2, Network Technology, Web Development, Web Server Programming, Computer Technology, Digital Communication Technology, security systems, and electronics.',
+  cv: 'His CV describes a System Developer focused on backend systems, APIs, and AI-powered applications. It covers Information Systems studies at Dalarna University, his Lugnet high school education, technical skills, and independent software development. Download his CV: https://aziz.smartdo.app/cv/abdiaziz-nor-cv.pdf',
+  experience: 'His CV lists independent software development from 2025 to present. He developed a workforce and shift-scheduling platform with messaging, subscriptions, and multilingual support; integrated backend services, APIs, databases, and authentication; and built task management, queue management, and workflow automation features. He worked across frontend, backend, and cloud deployment. No other employers or employment dates are listed in the CV.',
   projects: 'This portfolio uses React, Vite, Tailwind CSS, Supabase, and EmailJS. Its admin area manages projects, blog posts, and media uploads. You can explore his published projects in the Projects section.',
   services: 'His listed services include backend development, REST API design, React websites, database design, AI automation, system optimization, and cloud deployment support. Use the contact form to discuss a specific project.',
   automation: 'His AI automation focus includes workflow assistants, document summarization, support helpers, smart reporting, and API integrations that reduce repetitive work.',
@@ -15,6 +21,12 @@ export const FACTS = {
   availability: 'Please contact Abdiaziz directly about internships, developer roles, collaborations, or client projects. Current availability, pricing, and schedules are not confirmed in the portfolio.',
 };
 const patterns = [
+  ['cv', /\b(cv|resume|résumé|curriculum vitae)\b/i],
+  ['high_school', /\b(high\s*(?:school|shcool)|secondary school|lugnet(?:gymnasiet)?|gymnasium)\b/i],
+  ['diplomas', /\b(diplomas?|certificates?|certifications?|qualifications?|ccna|cisco|graduat(?:e|ed|ion)|degrees?)\b/i],
+  ['university', /\b(university|college|dalarna|högskolan|hogskolan)\b/i],
+  ['courses', /\b(courses?|coursework|subjects?|modules?)\b/i],
+  ['experience', /\b(work experience|employment|employers?|career|worked|professional experience)\b/i],
   ['contact', /\b(contact|hire|reach|email|linkedin|whatsapp)\b/i],
   ['education', /\b(education|stud(?:y|ies|ying)|school|university|college|course|ccna|degree)\b/i],
   ['availability', /\b(available|availability|internship|job|opportunity|freelance|price|pricing|schedule)\b/i],
@@ -24,12 +36,12 @@ const patterns = [
   ['skills', /\b(skills?|stack|technolog(?:y|ies)|strongest|tools|languages?|react|python|javascript|typescript)\b/i],
   ['projects', /\b(projects?|portfolio|built|github|shaqonet|smartdo|bank)\b/i],
   ['services', /\b(services?|offers?|client|business|build for|help with)\b/i],
-  ['intro', /\b(who|background|introduce|abdiaziz|aziz|about (?:you|him))\b/i],
+  ['intro', /\b(background|introduce|abdiaziz|aziz|about (?:you|him)|who (?:is|are) (?:he|you|abdiaziz|aziz))\b/i],
 ];
 const followUp = /^(?:tell me more|more|explain|details|go on|continue|what else|why|from where|where|source|how do you know)[?.!\s]*$/i;
 export function routeLocally(question, conversation = [], projects = []) {
   if (/^(hi|hello|hey|good (morning|afternoon|evening))[!.\s]*$/i.test(question)) return { topic: 'intro' };
-  if (/ignore.*instructions|system prompt|write (?:me )?(?:code|an essay)|solve|weather|recipe|capital of/i.test(question)) return { topic: 'unknown' };
+  if (/\b(wife|husband|girlfriend|boyfriend|children|birthday|salary|home address)\b|ignore.*instructions|system prompt|write (?:me )?(?:code|an essay)|solve|weather|recipe|capital of/i.test(question)) return { topic: 'unknown' };
   const project = projects.find(p => p.title && question.toLowerCase().includes(p.title.toLowerCase()));
   if (project) return { topic: 'projects', projectId: String(project.id) };
   if (followUp.test(question)) {

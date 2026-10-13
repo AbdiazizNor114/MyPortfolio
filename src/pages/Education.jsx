@@ -48,7 +48,7 @@ export default function Education() {
             <h2>Högskolan Dalarna, Sweden</h2>
             <p className="education-muted">Information Systems Programme - Data Science</p>
           </div>
-          <p className="education-year">2024 - Present</p>
+          <p className="education-year">August 2023 - Present</p>
         </div>
 
         <p className="education-description">

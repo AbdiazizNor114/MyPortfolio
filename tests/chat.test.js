@@ -50,3 +50,18 @@ test('endpoint provides JSON validation errors and rejects unsupported methods',
     assert.equal(res.statusCode,expected);assert.ok(output.error);
   }
 });
+
+test('answers school, qualifications, CV and experience from verified records', () => {
+  for (const question of ['Where did he go to high school?', 'where i went high shcool']) assert.equal(getPortfolioAnswer(question), FACTS.high_school);
+  for (const question of ['What diplomas does he have?', 'Does he have a university degree?', 'CCNA certificate']) assert.equal(getPortfolioAnswer(question), FACTS.diplomas);
+  assert.equal(getPortfolioAnswer('Who is his wife?'), SCOPE_MESSAGE);
+  assert.equal(getPortfolioAnswer('Who is the president?'), SCOPE_MESSAGE);
+  assert.equal(getPortfolioAnswer('Download his CV'), FACTS.cv);
+  assert.equal(getPortfolioAnswer('Which university did he attend?'), FACTS.university);
+  assert.equal(getPortfolioAnswer('What courses did he take?'), FACTS.courses);
+  assert.equal(getPortfolioAnswer('Where has he worked?'), FACTS.experience);
+  assert.equal(getPortfolioAnswer('tell me more', [{sender:'user',text:'His high school?'}]), FACTS.high_school);
+  assert.match(FACTS.university, /August 2023/);
+  assert.match(FACTS.diplomas, /ongoing/);
+  assert.match(FACTS.cv, /https:\/\/aziz.smartdo.app\/cv\/abdiaziz-nor-cv.pdf/);
+});
