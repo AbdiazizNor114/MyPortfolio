@@ -1,4 +1,5 @@
 import "../styles/pages/Education.css";
+import { AWS_CLOUD_OPS_BADGE } from "../../shared/certifications.js";
 
 const universityCourses = [
   "Object-Oriented Programming",
@@ -118,6 +119,22 @@ export default function Education() {
             ))}
           </ul>
         </div>
+      </section>
+      <section className="education-card">
+        <div className="education-card-header">
+          <div>
+            <p className="education-label">Training Badge</p>
+            <h2>{AWS_CLOUD_OPS_BADGE.title}</h2>
+            <p className="education-muted">{AWS_CLOUD_OPS_BADGE.issuer}</p>
+          </div>
+          <p className="education-year">{AWS_CLOUD_OPS_BADGE.issued}</p>
+        </div>
+        <p className="education-description">{AWS_CLOUD_OPS_BADGE.description}</p>
+        <div className="education-list-block">
+          <h4>Skills Gained</h4>
+          <ul>{AWS_CLOUD_OPS_BADGE.skills.map(skill => <li key={skill}>{skill}</li>)}</ul>
+        </div>
+        <a className="education-verify" href={AWS_CLOUD_OPS_BADGE.url} target="_blank" rel="noopener noreferrer">Verify badge on Credly ↗</a>
       </section>
     </div>
   );
