@@ -546,7 +546,7 @@ export default function Admin() {
               <label className="field-group">
                 <span>Live Demo</span>
                 <input
-                  placeholder="https://aziz.smidify.se or deployed project URL"
+                  placeholder="https://aziz.smartdo.app or deployed project URL"
                   value={form.demo}
                   onChange={(event) => setForm({ ...form, demo: event.target.value })}
                 />

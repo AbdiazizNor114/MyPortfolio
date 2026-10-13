@@ -161,3 +161,9 @@ button {
 .btn:active {
   transform: translateY(0);
 }
+
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+:where(button, a, [tabindex]):focus-visible { outline: 3px solid var(--glow); outline-offset: 4px; }
+.contact-status { font-size: 14px; line-height: 1.6; }
+.contact-status.error { color: #e85d5d; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDialog } from "../hooks/useDialog";
 import { renderMarkdown } from "../services/markdownService";
 
 export const PROJECTS = [
@@ -37,7 +38,7 @@ export const PROJECTS = [
     ],
     tech: ["React", "Supabase", "Tailwind", "Vite", "EmailJS"],
     github: "https://github.com/AbdiazizNor114/MyPortfolio",
-    demo: "https://aziz.smidify.se",
+    demo: "https://aziz.smartdo.app",
   },
 ];
 
@@ -178,6 +179,7 @@ export const normalizeProject = (project) => {
 export default function ProjectsView({ projects = [] }) {
   const [active, setActive] = useState("All");
   const [selected, setSelected] = useState(null);
+  const dialogRef = useDialog(Boolean(selected), () => setSelected(null));
   const projectItems = (projects.length > 0 ? projects : PROJECTS).map(normalizeProject);
   const activeKey = active.toLowerCase().replace(/\s+/g, "");
 
@@ -217,6 +219,11 @@ export default function ProjectsView({ projects = [] }) {
             className="project-card"
             key={project.title}
             style={{ animationDelay: `${index * 0.1}s` }}
+            role="button"
+            tabIndex={0}
+            aria-haspopup="dialog"
+            aria-label={`Open ${project.title}`}
+            onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setSelected(project); } }}
             onClick={() => setSelected(project)}
           >
             <div className="project-card__img">
@@ -256,7 +263,7 @@ export default function ProjectsView({ projects = [] }) {
           className="project-modal-overlay"
           onClick={(event) => event.target === event.currentTarget && setSelected(null)}
         >
-          <div className="project-modal-box" role="dialog" aria-modal="true" aria-label={selected.title}>
+          <div ref={dialogRef} className="project-modal-box" role="dialog" aria-modal="true" aria-label={selected.title}>
             <div className="project-modal-header">
               <div>
                 <h2 className="project-modal-title">{selected.title}</h2>

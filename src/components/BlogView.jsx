@@ -1,23 +1,6 @@
 import React, { useState } from "react";
+import { useDialog } from "../hooks/useDialog";
 import { renderMarkdown } from "../services/markdownService";
-
-const fallbackPosts = [
-  {
-    id: "portfolio-build",
-    title: "Building My Portfolio",
-    sub: "React - Firebase - Vite",
-    icon: "fa-pen-nib",
-    date: "Portfolio note",
-    desc: "A short note about building a modern developer portfolio with React, Firebase content, EmailJS contact handling, and an admin workflow.",
-    features: [
-      "React and Vite frontend structure",
-      "Supabase-powered dynamic content",
-      "EmailJS contact form integration",
-      "Admin workflow for projects and blog updates",
-    ],
-    tech: ["React", "Firebase", "Vite"],
-  },
-];
 
 const getPostHighlights = (post) => {
   const value = post.highlights || post.keyPoints || post.features;
@@ -94,7 +77,8 @@ const normalizePost = (post) => {
 
 export default function BlogView({ blogs, hasError = false }) {
   const [selected, setSelected] = useState(null);
-  const posts = blogs.length > 0 ? blogs.map(normalizePost) : fallbackPosts;
+  const dialogRef = useDialog(Boolean(selected), () => setSelected(null));
+  const posts = blogs.map(normalizePost);
 
   return (
     <section className="blog-section container" id="Blog">
@@ -105,9 +89,11 @@ export default function BlogView({ blogs, hasError = false }) {
 
       {hasError && (
         <p className="empty-text">
-          Blog posts could not be loaded right now. Showing a local fallback post.
+          Blog posts could not be loaded right now. Please try again later.
         </p>
       )}
+
+      {!hasError && posts.length === 0 && <p className="empty-text">No journal posts yet. Check back soon.</p>}
 
       <div className="blog-grid">
         {posts.map((post, index) => (
@@ -115,6 +101,11 @@ export default function BlogView({ blogs, hasError = false }) {
             className="blog-card"
             key={post.id}
             style={{ animationDelay: `${index * 0.1}s` }}
+            role="button"
+            tabIndex={0}
+            aria-haspopup="dialog"
+            aria-label={`Open ${post.title}`}
+            onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setSelected(post); } }}
             onClick={() => setSelected(post)}
           >
             <div className="blog-card__img">
@@ -150,7 +141,7 @@ export default function BlogView({ blogs, hasError = false }) {
           className="blog-modal-overlay"
           onClick={(event) => event.target === event.currentTarget && setSelected(null)}
         >
-          <div className="blog-modal-box" role="dialog" aria-modal="true" aria-label={selected.title}>
+          <div ref={dialogRef} className="blog-modal-box" role="dialog" aria-modal="true" aria-label={selected.title}>
             <div className="blog-modal-header">
               <div>
                 <h2 className="blog-modal-title">{selected.title}</h2>

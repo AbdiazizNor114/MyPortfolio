@@ -107,7 +107,7 @@ export default function App() {
   return (
     <div className="portfolio-wrapper">
       <SEO
-        title="Portfolio | Full Stack Developer"
+        title="Abdiaziz Nor | Full Stack Developer"
         description="Professional portfolio showcasing web development projects, skills, and experience in React, JavaScript, and modern web technologies."
         keywords="web development, react, javascript, portfolio, full stack developer, frontend, backend"
       />
@@ -129,7 +129,7 @@ export default function App() {
       {view === "education" && <Education />}
 
       <Footer />
-      <Chatbot />
+      <Chatbot projects={projects} />
     </div>
   );
 }
