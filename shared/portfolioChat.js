@@ -23,20 +23,20 @@ export const FACTS = {
 const patterns = [
   ['cv', /\b(cv|resume|résumé|curriculum vitae)\b/i],
   ['high_school', /\b(high\s*(?:school|shcool)|secondary school|lugnet(?:gymnasiet)?|gymnasium)\b/i],
-  ['diplomas', /\b(diplomas?|certificates?|certifications?|qualifications?|ccna|cisco|graduat(?:e|ed|ion)|degrees?)\b/i],
+  ['diplomas', /\b(finished (?:his |your |the )?studies)\b|\b(diplomas?|certificates?|certifications?|qualifications?|ccna|cisco|graduat(?:e|ed|ion)|degrees?)\b/i],
   ['university', /\b(university|college|dalarna|högskolan|hogskolan)\b/i],
   ['courses', /\b(courses?|coursework|subjects?|modules?)\b/i],
   ['experience', /\b(work experience|employment|employers?|career|worked|professional experience)\b/i],
-  ['contact', /\b(contact|hire|reach|email|linkedin|whatsapp)\b/i],
-  ['education', /\b(education|stud(?:y|ies|ying)|school|university|college|course|ccna|degree)\b/i],
+  ['contact', /\b(get (?:in touch|hold of)|talk to|send (?:him|you) a message)\b|\b(contact|hire|reach|email|linkedin|whatsapp)\b/i],
+  ['education', /\b(learn(?:ed)? all this|learn(?:ed)? to (?:code|program))\b|\b(education|stud(?:y|ies|ying)|school|university|college|course|ccna|degree)\b/i],
   ['availability', /\b(available|availability|internship|job|opportunity|freelance|price|pricing|schedule)\b/i],
   ['automation', /\b(automation|workflow|agent|summari[sz]er|chatbot)\b/i],
   ['ml', /\b(machine learning|ml|data science|ai experience)\b/i],
   ['databases', /\b(database|databases|supabase|firestore|firebase|mongodb|sql)\b/i],
-  ['skills', /\b(skills?|stack|technolog(?:y|ies)|strongest|tools|languages?|react|python|javascript|typescript)\b/i],
-  ['projects', /\b(projects?|portfolio|built|github|shaqonet|smartdo|bank)\b/i],
-  ['services', /\b(services?|offers?|client|business|build for|help with)\b/i],
-  ['intro', /\b(background|introduce|abdiaziz|aziz|about (?:you|him)|who (?:is|are) (?:he|you|abdiaziz|aziz))\b/i],
+  ['skills', /\b(good at|capable of|can (?:he|you) (?:use|work with)|know how to)\b|\b(skills?|stack|technolog(?:y|ies)|strongest|tools|languages?|react|python|javascript|typescript)\b/i],
+  ['projects', /\b(apps?|applications?|work samples?|examples? of (?:his|your) work|show (?:his|your) work)\b|\b(projects?|portfolio|built|github|shaqonet|smartdo|bank)\b/i],
+  ['services', /\b(can (?:he|you) (?:make|build|create)|for my (?:shop|company|business))\b|\b(services?|offers?|client|business|build for|help with)\b/i],
+  ['intro', /\b(his story|based|live|located)\b|\b(background|introduce|abdiaziz|aziz|about (?:you|him)|who (?:is|are) (?:he|you|abdiaziz|aziz))\b/i],
 ];
 export const INTRO_QUESTION = /^(?:who(?:'s| is| are) (?:this|that)(?: guy| man| person| developer)?|who(?:'s| is| are) (?:he|you)|(?:tell me|what can you tell me|can you tell me)(?: more)? about (?:him|yourself|this guy|this person)|what does (?:he|this guy) do)[?.!\s]*$/i;
 const followUp = /^(?:tell me more|more|explain|details|go on|continue|what else|why|from where|where|source|how do you know)[?.!\s]*$/i;
@@ -44,8 +44,16 @@ export function routeLocally(question, conversation = [], projects = []) {
   if (/^(hi|hello|hey|good (morning|afternoon|evening))[!.\s]*$/i.test(question)) return { topic: 'intro' };
   if (/\b(wife|husband|girlfriend|boyfriend|children|birthday|salary|home address)\b|ignore.*instructions|system prompt|write (?:me )?(?:code|an essay)|solve|weather|recipe|capital of/i.test(question)) return { topic: 'unknown' };
   if (INTRO_QUESTION.test(question.trim())) return { topic: 'intro' };
+  const projectDetail = /\b(source|code|repo|repository)\b/i.test(question) ? 'code' : /\b(try|demo|open|visit|live|link)\b/i.test(question) ? 'demo' : /\b(use(?:d)?|built with|build it|tech|stack)\b/i.test(question) ? 'tech' : 'summary';
   const project = projects.find(p => p.title && question.toLowerCase().includes(p.title.toLowerCase()));
-  if (project) return { topic: 'projects', projectId: String(project.id) };
+  if (project) return { topic: 'projects', projectId: String(project.id), projectDetail };
+  if (/\b(it|that app|that project|this app)\b/i.test(question)) {
+    for (const message of [...conversation].reverse()) {
+      if (message.sender !== 'user') continue;
+      const previous = routeLocally(message.text, [], projects);
+      if (previous.topic === 'projects') return { ...previous, projectDetail, detail: true };
+    }
+  }
   if (followUp.test(question)) {
     for (const message of [...conversation].reverse()) {
       if (message.sender === 'user' && !followUp.test(message.text)) {
@@ -54,16 +62,24 @@ export function routeLocally(question, conversation = [], projects = []) {
       }
     }
   }
-  return { topic: patterns.find(([, pattern]) => pattern.test(question))?.[0] || 'unknown' };
+  const topics = [...new Set(patterns.filter(([topic, pattern]) => topic !== 'intro' && pattern.test(question)).map(([topic]) => topic))];
+  if (/\b(and|also|plus)\b/i.test(question) && topics.length > 1) return { topic: topics[0], topics: topics.slice(0, 4), projectDetail };
+  return { topic: patterns.find(([, pattern]) => pattern.test(question))?.[0] || 'unknown', projectDetail };
 }
 export function answerFromFacts(route, projects = []) {
+  if (route?.missing) return 'That detail is not listed in Abdiaziz’s portfolio or CV. Please contact him directly to confirm it.';
+  if (route?.topics?.length > 1) return route.topics.map(topic => answerFromFacts({ ...route, topic, topics: undefined }, projects)).join('\n\n');
   if (!TOPICS.includes(route?.topic) || route.topic === 'unknown') return SCOPE_MESSAGE;
   if (route.topic === 'projects' && projects.length) {
     const project = projects.find(p => String(p.id) === route.projectId);
     if (project) {
+      if (route.projectDetail === 'tech') return `${project.title} uses ${project.tech || 'technologies not listed in the portfolio'}.`;
+      if (route.projectDetail === 'code') return project.github ? `Source code for ${project.title}: ${project.github}` : `A public source-code link for ${project.title} is not listed.`;
+      if (route.projectDetail === 'demo') return project.demo ? `Try ${project.title}: ${project.demo}` : `A live demo for ${project.title} is not listed.`;
       const summary = String(project.desc || project.content || '').replace(/^#{1,6}\s*/gm, '').replace(/[*_`]/g, '').slice(0, route.detail ? 1800 : 1000);
       return `${project.title}\n\n${summary || 'Open this project in the Projects section for details.'}${project.tech ? '\n\nTech: ' + project.tech : ''}${project.github ? '\n\nCode: ' + project.github : ''}${project.demo ? '\nLive demo: ' + project.demo : ''}`;
     }
+    if (route.detail || ['tech', 'code', 'demo'].includes(route.projectDetail)) return projects.map(p => answerFromFacts({ ...route, projectId: String(p.id) }, [p])).join('\n\n');
     return `Published projects include ${projects.map(p => p.title).filter(Boolean).join(', ')}. Open the Projects section for case studies, source code, and live demos.\n\n${FACTS.projects}`;
   }
   return FACTS[route.topic];

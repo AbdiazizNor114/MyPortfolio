@@ -76,3 +76,26 @@ test('accepts casual introductions without requiring suggested questions', async
   }
   assert.equal(getPortfolioAnswer('Who is this guy, Elon Musk?'), SCOPE_MESSAGE);
 });
+
+test('semantic routing supports multiple subjects, project facets and missing facts', async () => {
+  const projects=[{id:'a',title:'Planner',desc:'Team scheduling.',tech:'React',github:'https://example.com/code',demo:'https://example.com/app'}];
+  const run=async route=>createChatReply({messages:[{sender:'user',text:'A naturally worded question'}]}, {
+    env:{GROQ_API_KEY:'test',VITE_SUPABASE_URL:'https://example.supabase.co',VITE_SUPABASE_PUBLISHABLE_KEY:'public'},
+    fetchImpl:async url=>({ok:true,json:async()=>String(url).includes('/rest/v1/')?projects:{choices:[{message:{content:JSON.stringify(route)}}]}}),
+  });
+  const combined=await run({topic:'education',topics:['education','projects','invalid','education']});
+  assert.match(combined.text,/Högskolan Dalarna/);assert.match(combined.text,/Planner/);
+  for(const [projectDetail,expected] of [['tech','React'],['code','https://example.com/code'],['demo','https://example.com/app']]) {
+    const reply=await run({topic:'projects',projectId:'a',projectDetail});assert.ok(reply.text.includes(expected));
+  }
+  assert.match((await run({topic:'unknown',missing:true})).text,/not listed/);
+});
+
+test('free fallback keeps project context and combines requested subjects', () => {
+  const projects=[{id:'p',title:'SmartDo',desc:'Task planning.',tech:'React',demo:'https://example.com'}];
+  const history=[{sender:'user',text:'Tell me about SmartDo'}];
+  assert.match(getPortfolioAnswer('what did he use to build it?',history,projects),/uses React/);
+  assert.match(getPortfolioAnswer('can I try that app?',history,projects),/https:\/\/example.com/);
+  const combined=getPortfolioAnswer('show his work and qualifications',[],projects);
+  assert.match(combined,/SmartDo/);assert.match(combined,/vocational high school diploma/);
+});
