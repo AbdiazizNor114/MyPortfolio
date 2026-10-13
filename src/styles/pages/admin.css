@@ -684,3 +684,8 @@
 .admin-login { max-width: 480px; margin: 10vh auto; padding: 28px; }
 .admin-login h1 { margin-bottom: 24px; }
 .admin-login > button { margin-top: 20px; }
+
+.admin-media-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.admin-media-gallery > div { display: flex; flex-direction: column; gap: 8px; padding: 12px; border: 1px solid var(--border); border-radius: 10px; }
+.admin-media-gallery img, .admin-media-gallery video { width: 100%; height: 140px; object-fit: contain; background: #10151c; }
+.admin-media-gallery button { padding: 8px; border: 1px solid var(--border); border-radius: 6px; background: transparent; color: var(--text-beige); }

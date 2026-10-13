@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
+import ProjectGallery from "./ProjectGallery";
+import { getProjectMedia, isVideoMedia } from "../../shared/projectMedia";
 import { useDialog } from "../hooks/useDialog";
 import { renderMarkdown } from "../services/markdownService";
 
@@ -120,7 +123,7 @@ const getPlainText = (value) =>
     .replace(/\s+/g, " ")
     .trim();
 
-const isVideoMedia = (url) => /\.(mp4|webm|ogg)(\?|#|$)/i.test(url);
+
 
 function ProjectMedia({ project, className }) {
   const [hasError, setHasError] = useState(false);
@@ -166,7 +169,8 @@ export const normalizeProject = (project) => {
     sub: project.sub || `${project.language || badge} - Portfolio project`,
     tag,
     badge,
-    image: project.media || project.image || project.thumbnail || project.cover || "",
+    gallery: getProjectMedia(project.media || project.image || project.thumbnail || project.cover),
+    image: getProjectMedia(project.media || project.image || project.thumbnail || project.cover)[0] || "",
     desc,
     excerpt: getPlainText(desc),
     features: getProjectFeatures(project),
@@ -179,7 +183,15 @@ export const normalizeProject = (project) => {
 export default function ProjectsView({ projects = [] }) {
   const [active, setActive] = useState("All");
   const [selected, setSelected] = useState(null);
-  const dialogRef = useDialog(Boolean(selected), () => setSelected(null));
+  const [expanded, setExpanded] = useState(false);
+  const closeProject = () => { setExpanded(false); setSelected(null); };
+  const dialogRef = useDialog(Boolean(selected), () => expanded ? setExpanded(false) : closeProject());
+  useEffect(() => {
+    if (!selected) return;
+    dialogRef.current?.querySelector('.project-modal-close')?.focus();
+    const body = dialogRef.current?.querySelector('.project-modal-body');
+    if (body) body.scrollTop = 0;
+  }, [expanded, selected]);
   const projectItems = (projects.length > 0 ? projects : PROJECTS).map(normalizeProject);
   const activeKey = active.toLowerCase().replace(/\s+/g, "");
 
@@ -258,12 +270,12 @@ export default function ProjectsView({ projects = [] }) {
         ))}
       </div>
 
-      {selected && (
+      {selected && createPortal(
         <div
           className="project-modal-overlay"
-          onClick={(event) => event.target === event.currentTarget && setSelected(null)}
+          onClick={(event) => event.target === event.currentTarget && closeProject()}
         >
-          <div ref={dialogRef} className="project-modal-box" role="dialog" aria-modal="true" aria-label={selected.title}>
+          <div ref={dialogRef} className={`project-modal-box${expanded ? " project-modal-box--expanded" : ""}`} role="dialog" aria-modal="true" aria-label={selected.title}>
             <div className="project-modal-header">
               <div>
                 <h2 className="project-modal-title">{selected.title}</h2>
@@ -272,7 +284,7 @@ export default function ProjectsView({ projects = [] }) {
               <button
                 type="button"
                 className="project-modal-close"
-                onClick={() => setSelected(null)}
+                onClick={closeProject}
                 aria-label="Close modal"
               >
                 <i className="fa-solid fa-xmark" aria-hidden="true" />
@@ -280,10 +292,9 @@ export default function ProjectsView({ projects = [] }) {
             </div>
 
             <div className="project-modal-body">
-              <div className="project-modal-preview">
-                <ProjectMedia project={selected} className="project-modal-preview-img" />
-              </div>
+              <ProjectGallery key={selected.id || selected.title} project={selected} expanded={expanded} onExpand={setExpanded} />
 
+              {!expanded && <div className="project-details">
               <div
                 className="project-modal-desc"
                 dangerouslySetInnerHTML={{ __html: renderMarkdown(selected.desc) }}
@@ -331,9 +342,10 @@ export default function ProjectsView({ projects = [] }) {
                   </a>
                 )}
               </div>
+              </div>}
             </div>
           </div>
-        </div>
+        </div>, document.body
       )}
     </section>
   );

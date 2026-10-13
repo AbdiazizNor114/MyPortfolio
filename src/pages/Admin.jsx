@@ -4,6 +4,7 @@ import { supabase, getSupabase } from "../supabase";
 import { dataService } from "../services/dataService";
 import { renderMarkdown } from "../services/markdownService";
 import "../styles/pages/admin.css";
+import { getProjectMedia, isVideoMedia } from "../../shared/projectMedia";
 
 const LANGUAGE_OPTIONS = [
   "Python",
@@ -273,26 +274,29 @@ export default function Admin() {
   };
 
   const handleFileUpload = async (event) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+    const files = Array.from(event.target.files || []);
+    if (!files.length) return;
     setUploadError("");
-    if (file.size > 50 * 1024 * 1024) {
+    if (files.some(file => file.size > 50 * 1024 * 1024)) {
       setUploadError("Choose a file smaller than 50 MB.");
       return;
     }
     setIsUploading(true);
     try {
       const client = getSupabase();
+      for (const file of files) {
       const cleanName = file.name.replace(/[^a-zA-Z0-9._-]/g, '-').toLowerCase();
       const path = `media/${tab}/${crypto.randomUUID()}-${cleanName}`;
       const { error: storageError } = await client.storage.from('portfolio-media').upload(path, file);
       if (storageError) throw storageError;
       const { data } = client.storage.from('portfolio-media').getPublicUrl(path);
-      setForm((prev) => ({ ...prev, media: data.publicUrl }));
+      setForm((prev) => ({ ...prev, media: isProject ? [...getProjectMedia(prev.media), data.publicUrl].join("\n") : data.publicUrl }));
+      }
     } catch (err) {
       setUploadError(`Upload failed: ${err.message}`);
     } finally {
       setIsUploading(false);
+      event.target.value = "";
     }
   };
 
@@ -475,9 +479,10 @@ export default function Admin() {
           </div>
 
           <label className="field-group">
-            <span>Media</span>
-            <input
-              placeholder="Media URL or filename, example: demo.mp4 or image.png"
+            <span>{isProject ? "Screenshots & videos" : "Media"}</span>
+            <textarea
+              rows={isProject ? 3 : 1}
+              placeholder={isProject ? "One image or video URL per line. The first is the cover." : "Image or video URL"}
               value={form.media}
               onChange={(event) => setForm({ ...form, media: event.target.value })}
             />
@@ -485,8 +490,9 @@ export default function Admin() {
 
           <div className="admin-upload-row">
             <label className="admin-upload-label">
-              Upload image/video
+              {isProject ? "Add screenshots or videos" : "Upload image/video"}
               <input
+                multiple={isProject}
                 type="file"
                 accept="image/*,video/*"
                 onChange={handleFileUpload}
@@ -501,6 +507,12 @@ export default function Admin() {
             )}
             {uploadError && <small className="admin-upload-error">{uploadError}</small>}
           </div>
+
+          {isProject && getProjectMedia(form.media).length > 0 && <div className="admin-media-gallery">{getProjectMedia(form.media).map((url, index) => <div key={url}>
+            {isVideoMedia(url) ? <video src={url} controls preload="metadata" /> : <img src={url} alt={`Screenshot ${index + 1}`} />}
+            <span>{index === 0 ? 'Cover' : `Screenshot ${index + 1}`}</span>
+            <button type="button" disabled={isUploading || isSaving} onClick={() => setForm(prev => ({...prev, media: getProjectMedia(prev.media).filter(item => item !== url).join('\n')}))}>Remove from project</button>
+          </div>)}</div>}
 
           <label className="field-group">
             <span>{isProject ? "Key Features" : "Key Points"}</span>
