@@ -9,6 +9,8 @@ In your project's Supabase Dashboard, open **SQL Editor** and run these files in
 
 1. `migrations/20261013000100_portfolio_content.sql`
 2. `migrations/20261013000200_portfolio_media.sql`
+3. `migrations/20261013000300_allow_svg_media.sql`
+4. `migrations/20261013000400_allow_image_and_video_formats.sql`
 
 Run each file once. They create `projects`, `blogs`, `portfolio_admins`, and the
 public `portfolio-media` storage bucket. All content rows and bucket files are
@@ -49,6 +51,8 @@ Open `/admin` and sign in with your allowlisted Supabase Auth account.
 Firebase Analytics has been removed with the Firebase client dependency.
 
 Files upload to the public `portfolio-media` bucket, up to 50 MiB each.
+All image and video MIME subtypes are allowed, including SVG, PNG, JPEG, WebP,
+GIF, AVIF, HEIC, MP4, and WebM. Preview support depends on the browser.
 IDs are text so Firestore IDs can be retained during import. Normalize legacy
 arrays/aliases before importing into the string fields used by the current form.
 Keep Firebase data until content and media have been verified in Supabase.
