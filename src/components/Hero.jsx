@@ -1,4 +1,5 @@
 import React from "react";
+import { ArrowUpRight, Coffee } from "lucide-react";
 import { CV_ICON_URL, CV_URL } from "../constants";
 
 export default function Hero() {
@@ -11,6 +12,12 @@ export default function Hero() {
             <h2>ABDIAZIZ<br />NOR</h2>
             <h6 className="glow-text">Full-stack developer building backend systems, AI tools, and practical web apps</h6>
           </div>
+
+          <a className="hero-support-button" href="https://buymeacoffee.com/abdiaziznor" target="_blank" rel="noopener noreferrer" aria-label="Buy me a coffee (opens in a new tab)">
+            <Coffee size={20} aria-hidden="true" />
+            Buy me a coffee
+            <ArrowUpRight size={18} aria-hidden="true" />
+          </a>
 
           <div className="contact-me">
             <a href="https://wa.link/uonz28" target="_blank" rel="noopener noreferrer">

@@ -198,3 +198,27 @@
     transform: scale(1);
   }
 }
+
+.hero-support-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  align-self: flex-start;
+  max-width: 100%;
+  flex-shrink: 0;
+  padding: 14px 20px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--glow), var(--accent));
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.hero-support-button:hover {
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+

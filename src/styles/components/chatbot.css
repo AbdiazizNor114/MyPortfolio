@@ -20,6 +20,9 @@
 .send-btn { flex-shrink: 0; width: 44px; height: 44px; display: grid; place-items: center; border: none; border-radius: 10px; background: var(--accent); color: #fff; cursor: pointer; }
 .send-btn:disabled { opacity: .45; cursor: not-allowed; }
 .chat-footnote { padding: 0 14px 12px; margin: 0; font-size: 11px; opacity: .7; }
+.chat-support { flex-shrink: 0; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 14px; border-top: 1px solid var(--border); background: var(--glass); color: var(--text-beige); font-size: 12px; }
+.chat-support:hover { color: var(--glow); }
+.chat-support svg { flex-shrink: 0; }
 .typing-indicator { display: flex; gap: 5px; align-items: center; }
 .typing-indicator span { width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: chat-pulse 1s infinite alternate; }
 .typing-indicator span:nth-child(2) { animation-delay: .2s; }

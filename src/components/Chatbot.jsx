@@ -1,4 +1,4 @@
-import { MessageCircle, Send, X, RotateCcw } from 'lucide-react';
+import { MessageCircle, Send, X, RotateCcw, Coffee, ArrowUpRight } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { getPortfolioAnswer, MAX_HISTORY, MAX_MESSAGE_LENGTH } from '../../shared/portfolioChat.js';
 
@@ -73,6 +73,7 @@ export default function Chatbot({ projects = [] }) {
         <button className="send-btn" disabled={isLoading || !input.trim()} type="submit" aria-label="Send question"><Send size={18} /></button>
       </form>
       <p className="chat-footnote">{mode === 'portfolio' ? 'Portfolio answers · AI is temporarily unavailable' : mode === 'ai' ? 'Answers based on this portfolio' : 'Answers stay within this portfolio'}</p>
+      <a className="chat-support" href="https://buymeacoffee.com/abdiaziznor" target="_blank" rel="noopener noreferrer" aria-label="Buy Abdiaziz a coffee (opens in a new tab)"><Coffee size={16} aria-hidden="true" /><span>Enjoy my work? Buy me a coffee</span><ArrowUpRight size={15} aria-hidden="true" /></a>
     </section>}
   </>;
 }
