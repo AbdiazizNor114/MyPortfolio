@@ -2,9 +2,10 @@ import { AWS_CLOUD_OPS_BADGE } from './certifications.js';
 
 export const MAX_MESSAGE_LENGTH = 1200;
 export const MAX_HISTORY = 10;
-export const TOPICS = ['intro', 'skills', 'education', 'high_school', 'university', 'diplomas', 'cloud_training', 'courses', 'cv', 'experience', 'projects', 'services', 'automation', 'ml', 'databases', 'contact', 'availability', 'unknown'];
+export const TOPICS = ['intro', 'skills', 'education', 'high_school', 'university', 'diplomas', 'cloud_training', 'courses', 'cv', 'experience', 'projects', 'services', 'automation', 'ml', 'databases', 'contact', 'availability', 'support', 'unknown'];
 export const SCOPE_MESSAGE = "I can help with Abdiaziz’s background, skills, education, high school, diplomas, CV, projects, services, and contact details. I only answer questions about his portfolio.";
 export const FACTS = {
+  support: 'You can support Abdiaziz’s projects by buying him a coffee. Thank you for helping him keep building and sharing! https://buymeacoffee.com/abdiaziznor',
   intro: 'Abdiaziz Nor is a System Developer and AI enthusiast based in Sweden, focused on backend systems, APIs, React applications, and practical AI automation.',
   skills: 'His portfolio lists React, Tailwind CSS, JavaScript, TypeScript, Node.js, Python, Java, C#, Dart, Flutter, Firebase, MongoDB, API development, Git, and machine learning with Python. This site also uses Supabase.',
   education: 'He studies Information Systems with a Data Science focus at Högskolan Dalarna. His listed coursework includes AI, Data Science & Machine Learning, Database Systems, web applications, responsive web design, and IT Project Management. He also completed CCNA: Introduction to Networks.',
@@ -24,6 +25,7 @@ export const FACTS = {
   availability: 'Please contact Abdiaziz directly about internships, developer roles, collaborations, or client projects. Current availability, pricing, and schedules are not confirmed in the portfolio.',
 };
 const patterns = [
+  ['support', /\b(donat(?:e|ion|ions)|buy\s+(?:him|you|me|abdiaziz)\s+(?:a\s+)?coffee|buy\s*me\s*a\s*coffee|ko-?fi|support (?:your|his|abdiaziz[’\x27]s|the) (?:work|projects?))\b/i],
   ['cloud_training', /\b(aws|amazon web services|cloud ops|cloud operations|credly|cloud training)\b/i],
   ['cv', /\b(cv|resume|résumé|curriculum vitae)\b/i],
   ['high_school', /\b(high\s*(?:school|shcool)|secondary school|lugnet(?:gymnasiet)?|gymnasium)\b/i],
