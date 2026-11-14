@@ -102,7 +102,7 @@ export default function Education() {
             <h2>CCNA: Introduction to Networks</h2>
             <p className="education-muted">Cisco Networking Academy</p>
           </div>
-          <p className="education-year">2024</p>
+          <p className="education-year">March 25, 2024</p>
         </div>
 
         <p className="education-description">
@@ -128,6 +128,7 @@ export default function Education() {
             <h2>{LINUX_UNHATCHED_BADGE.title}</h2>
             <p className="education-muted">{LINUX_UNHATCHED_BADGE.issuer}</p>
           </div>
+          <p className="education-year">{LINUX_UNHATCHED_BADGE.issued}</p>
         </div>
         <div className="education-list-block">
           <h4>Skills Gained</h4>

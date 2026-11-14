@@ -112,6 +112,7 @@
 }
 
 .education-list-block {
+  margin-top: 24px;
   position: relative;
 }
 
@@ -124,7 +125,7 @@
 
 .education-list-block ul {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
   gap: 10px;
   list-style: none;
   padding: 0;
