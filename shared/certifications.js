@@ -6,3 +6,10 @@ export const AWS_CLOUD_OPS_BADGE = {
   description: 'Completed AWS Educate training and passed the Cloud Operations assessment, covering the Well-Architected Framework and AWS services for managing cloud environments.',
   skills: ['AWS Cloud', 'AWS Cloud Ops', 'Amazon Web Services (AWS)', 'Cloud Operations'],
 };
+
+export const LINUX_UNHATCHED_BADGE = {
+  title: 'Linux Unhatched',
+  issuer: 'Cisco Networking Academy',
+  url: 'https://www.credly.com/badges/0c1d4f91-d73c-4531-ab31-ee4de73f43f3',
+  image: '/images/linux-unhatched.png',
+};

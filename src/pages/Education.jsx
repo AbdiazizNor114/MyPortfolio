@@ -1,5 +1,5 @@
 import "../styles/pages/Education.css";
-import { AWS_CLOUD_OPS_BADGE } from "../../shared/certifications.js";
+import { AWS_CLOUD_OPS_BADGE, LINUX_UNHATCHED_BADGE } from "../../shared/certifications.js";
 
 const universityCourses = [
   "Object-Oriented Programming",
@@ -120,6 +120,19 @@ export default function Education() {
           </ul>
         </div>
         <a className="education-verify" href="https://www.credly.com/badges/20b57744-2fee-45a7-a38f-380a4d878228" target="_blank" rel="noopener noreferrer">Verify CCNA badge on Credly ↗</a>
+      </section>
+      <section className="education-card">
+        <div className="education-card-header">
+          <div>
+            <p className="education-label">Certification</p>
+            <h2>{LINUX_UNHATCHED_BADGE.title}</h2>
+            <p className="education-muted">{LINUX_UNHATCHED_BADGE.issuer}</p>
+          </div>
+          <a href={LINUX_UNHATCHED_BADGE.url} target="_blank" rel="noopener noreferrer" aria-label="Verify Linux Unhatched badge on Credly (opens in a new tab)">
+            <img className="education-badge-image" src={LINUX_UNHATCHED_BADGE.image} alt="Cisco Networking Academy verified Linux Unhatched badge" width="150" height="150" loading="lazy" />
+          </a>
+        </div>
+        <a className="education-verify" href={LINUX_UNHATCHED_BADGE.url} target="_blank" rel="noopener noreferrer">Verify Linux Unhatched badge on Credly ↗</a>
       </section>
       <section className="education-card">
         <div className="education-card-header">
