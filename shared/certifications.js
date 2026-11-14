@@ -9,7 +9,7 @@ export const AWS_CLOUD_OPS_BADGE = {
 
 export const LINUX_UNHATCHED_BADGE = {
   title: 'Linux Unhatched',
+  skills: ['Linux command-line basics', 'File system navigation', 'File and directory management', 'Basic shell scripting', 'File permissions and ownership'],
   issuer: 'Cisco Networking Academy',
   url: 'https://www.credly.com/badges/0c1d4f91-d73c-4531-ab31-ee4de73f43f3',
-  image: '/images/linux-unhatched.png',
 };

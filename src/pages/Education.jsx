@@ -128,9 +128,10 @@ export default function Education() {
             <h2>{LINUX_UNHATCHED_BADGE.title}</h2>
             <p className="education-muted">{LINUX_UNHATCHED_BADGE.issuer}</p>
           </div>
-          <a href={LINUX_UNHATCHED_BADGE.url} target="_blank" rel="noopener noreferrer" aria-label="Verify Linux Unhatched badge on Credly (opens in a new tab)">
-            <img className="education-badge-image" src={LINUX_UNHATCHED_BADGE.image} alt="Cisco Networking Academy verified Linux Unhatched badge" width="150" height="150" loading="lazy" />
-          </a>
+        </div>
+        <div className="education-list-block">
+          <h4>Skills Gained</h4>
+          <ul>{LINUX_UNHATCHED_BADGE.skills.map(skill => <li key={skill}>{skill}</li>)}</ul>
         </div>
         <a className="education-verify" href={LINUX_UNHATCHED_BADGE.url} target="_blank" rel="noopener noreferrer">Verify Linux Unhatched badge on Credly ↗</a>
       </section>
